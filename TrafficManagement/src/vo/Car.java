@@ -12,6 +12,25 @@ public class Car {
     private String endTime;
     
     
+    
+    /**
+     * ¹¹Ôìº¯Êý
+     * @param carID
+     * @param originCross
+     * @param destiCross
+     * @param maxVelocity
+     * @param startTime
+     * @author Tricia
+     */
+	public Car(String carID, Cross originCross, Cross destiCross, int maxVelocity, String startTime)
+	{
+		this.carID=carID;
+		this.originCross = originCross;
+		this.destiCross=destiCross;
+		this.maxVelocity=maxVelocity;
+		this.startTime=startTime;
+		
+	}
 	public String getCarID() {
 		return carID;
 	}

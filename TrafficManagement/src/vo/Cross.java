@@ -7,7 +7,27 @@ public class Cross {
     private Road leftRoad;
     private Road rightRoad;
 
-    public String getCrossID() {
+    /**
+     * ¹¹Ôìº¯Êý
+     * @param crossID
+     * @author Tricia
+     * @version 2019-03-16
+     */
+    public Cross(String crossID)
+	{
+		this.crossID=crossID;
+	}
+
+	public Cross(String crossID,Road upRoad,Road rightRoad,Road downRoad,Road leftRoad)
+	{
+		this.crossID=crossID;
+		this.upRoad=upRoad;
+		this.rightRoad=rightRoad;
+		this.downRoad=downRoad;
+		this.leftRoad=leftRoad;
+	}
+
+	public String getCrossID() {
         return crossID;
     }
 

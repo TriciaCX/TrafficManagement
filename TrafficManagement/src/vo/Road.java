@@ -4,15 +4,31 @@ import java.util.Vector;
 
 public class Road {
     private String roadID;
-    private String roadLength;
-    private String maxRoadVelocity;
+    private int roadLength;
+    private int maxRoadVelocity;
     private Vector<Lane> lanes;
     private  int  lanesNum;
     private  Cross fromCross;
     private  Cross toCross;
     private boolean isDuplex;
 
-    public String getRoadID() {
+    public Road(String roadID, int length, int speed, int channel, Cross from, Cross to, boolean isDuplex)
+	{
+		this.roadID=roadID;
+		this.roadLength=length;
+		this.maxRoadVelocity=speed;
+		this.lanesNum=channel;
+		this.fromCross=from;
+		this.toCross=to;
+		this.isDuplex=isDuplex;
+	}
+
+	public Road(String roadID)
+	{
+		this.roadID=roadID;
+	}
+
+	public String getRoadID() {
         return roadID;
     }
 
@@ -20,19 +36,19 @@ public class Road {
         this.roadID = roadID;
     }
 
-    public String getRoadLength() {
+    public int getRoadLength() {
         return roadLength;
     }
 
-    public void setRoadLength(String roadLength) {
+    public void setRoadLength(int roadLength) {
         this.roadLength = roadLength;
     }
 
-    public String getMaxRoadVelocity() {
+    public int getMaxRoadVelocity() {
         return maxRoadVelocity;
     }
 
-    public void setMaxRoadVelocity(String maxRoadVelocity) {
+    public void setMaxRoadVelocity(int maxRoadVelocity) {
         this.maxRoadVelocity = maxRoadVelocity;
     }
 
