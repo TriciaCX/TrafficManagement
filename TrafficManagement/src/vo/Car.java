@@ -1,18 +1,17 @@
 package vo;
 
 public class Car {
-    private String carID;//车辆ID
+    private String carID;     //车辆ID
     private Cross originCross;
     private Cross destiCross;
     private int maxVelocity;
     private int realVelocity;
-    private String startTime;
-    private String realStartTime;
-    private String currentTime;
-    private String endTime;
+    private float startTime;
+    private float realStartTime;
+    private float currentTime;
+    private float endTime;
     
-    
-    
+       
     /**
      * 构造函数
      * @param carID
@@ -22,7 +21,7 @@ public class Car {
      * @param startTime
      * @author Tricia
      */
-	public Car(String carID, Cross originCross, Cross destiCross, int maxVelocity, String startTime)
+	public Car(String carID, Cross originCross, Cross destiCross, int maxVelocity, float startTime)
 	{
 		this.carID=carID;
 		this.originCross = originCross;
@@ -61,32 +60,38 @@ public class Car {
 	public void setRealVelocity(int realVelocity) {
 		this.realVelocity = realVelocity;
 	}
-	public String getStartTime() {
+	public float getStartTime()
+	{
 		return startTime;
 	}
-	public void setStartTime(String startTime) {
+	public void setStartTime(float startTime)
+	{
 		this.startTime = startTime;
 	}
-	public String getRealStartTime() {
+	public float getRealStartTime()
+	{
 		return realStartTime;
 	}
-	public void setRealStartTime(String realStartTime) {
+	public void setRealStartTime(float realStartTime)
+	{
 		this.realStartTime = realStartTime;
 	}
-	public String getCurrentTime() {
+	public float getCurrentTime()
+	{
 		return currentTime;
 	}
-	public void setCurrentTime(String currentTime) {
+	public void setCurrentTime(float currentTime)
+	{
 		this.currentTime = currentTime;
 	}
-	public String getEndTime() {
+	public float getEndTime()
+	{
 		return endTime;
 	}
-	public void setEndTime(String endTime) {
+	public void setEndTime(float endTime)
+	{
 		this.endTime = endTime;
 	}
-    
-
 
   
 }

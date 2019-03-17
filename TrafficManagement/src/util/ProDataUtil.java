@@ -73,7 +73,7 @@ public class ProDataUtil
 	/**
 	 * ---car数据预处理----
 	 * @param  传入的car.txt按时间、顺序分类
-	 * car数据格式(id,from,to,speed,planTime)，如(10000, 18, 50, 8, 3)，对应数据格式string,cross,cross,int,string.但此处默认读入的都是string
+	 * car数据格式(id,from,to,speed,planTime)，如(10000, 18, 50, 8, 3)，对应数据格式string,cross,cross,int,float.但此处默认读入的都是string
 	 * @author Tricia
 	 * @version 2019-3-16
 	 */
@@ -89,7 +89,8 @@ public class ProDataUtil
 			int maxVelocity = Integer.valueOf(tempStr[3]);
 			Cross from = new Cross(tempStr[1]);
 			Cross to = new Cross(tempStr[2]);
-			Car c = new Car(tempStr[0],from,to,maxVelocity,tempStr[4]);
+			float planTime = Float.valueOf(tempStr[4]);
+			Car c = new Car(tempStr[0],from,to,maxVelocity,planTime);
 			carList.add(c);
 		}
 		

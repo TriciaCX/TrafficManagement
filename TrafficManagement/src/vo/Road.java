@@ -1,16 +1,18 @@
 package vo;
 
+import java.util.LinkedList;
 import java.util.Vector;
 
 public class Road {
     private String roadID;
     private int roadLength;
-    private int maxRoadVelocity;
+    private int maxRoadVelocity;    
     private Vector<Lane> lanes;
     private  int  lanesNum;
     private  Cross fromCross;
     private  Cross toCross;
     private boolean isDuplex;
+    public LinkedList<CarInOutPriority> cars;
 
     public Road(String roadID, int length, int speed, int channel, Cross from, Cross to, boolean isDuplex)
 	{
