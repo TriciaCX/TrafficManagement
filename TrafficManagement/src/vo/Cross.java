@@ -6,6 +6,9 @@ public class Cross {
     private Road downRoad;
     private Road leftRoad;
     private Road rightRoad;
+    public boolean known;
+    public float dist;
+    public Cross path;
 
     /**
      * ¹¹Ôìº¯Êý
@@ -66,4 +69,34 @@ public class Cross {
     public void setRightRoad(Road rightRoad) {
         this.rightRoad = rightRoad;
     }
+
+	public boolean isKnown()
+	{
+		return known;
+	}
+
+	public void setKnown(boolean known)
+	{
+		this.known = known;
+	}
+
+	public float getDist()
+	{
+		return dist;
+	}
+
+	public void setDist(float dist)
+	{
+		this.dist = dist;
+	}
+
+	public Cross getPath()
+	{
+		return path;
+	}
+
+	public void setPath(Cross path)
+	{
+		this.path = path;
+	}
 }

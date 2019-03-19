@@ -6,10 +6,10 @@ public class Car {
     private Cross destiCross;
     private int maxVelocity;
     private int realVelocity;
-    private float startTime;
-    private float realStartTime;
-    private float currentTime;
-    private float endTime;
+    private int startTime;  //planTime
+    private int realStartTime; //实际出发时间
+    private int currentTime; 
+    private int endTime; //实际达到时间
     
        
     /**
@@ -21,7 +21,7 @@ public class Car {
      * @param startTime
      * @author Tricia
      */
-	public Car(String carID, Cross originCross, Cross destiCross, int maxVelocity, float startTime)
+	public Car(String carID, Cross originCross, Cross destiCross, int maxVelocity, int startTime)
 	{
 		this.carID=carID;
 		this.originCross = originCross;
@@ -64,7 +64,7 @@ public class Car {
 	{
 		return startTime;
 	}
-	public void setStartTime(float startTime)
+	public void setStartTime(int startTime)
 	{
 		this.startTime = startTime;
 	}
@@ -72,7 +72,7 @@ public class Car {
 	{
 		return realStartTime;
 	}
-	public void setRealStartTime(float realStartTime)
+	public void setRealStartTime(int realStartTime)
 	{
 		this.realStartTime = realStartTime;
 	}
@@ -80,7 +80,7 @@ public class Car {
 	{
 		return currentTime;
 	}
-	public void setCurrentTime(float currentTime)
+	public void setCurrentTime(int currentTime)
 	{
 		this.currentTime = currentTime;
 	}
@@ -88,7 +88,7 @@ public class Car {
 	{
 		return endTime;
 	}
-	public void setEndTime(float endTime)
+	public void setEndTime(int endTime)
 	{
 		this.endTime = endTime;
 	}

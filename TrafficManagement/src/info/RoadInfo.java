@@ -19,7 +19,7 @@ public class RoadInfo {
 		 * @param t
 		 * @return CurCarsNum 
 		 */
-		public int getCurCarsNum(Road myRoad,float t) {
+		public static int getCurCarsNum(Road myRoad,float t) {
 			int CurCarsNum = 0;
 			for (CarInOutPriority tempCar:myRoad.cars) 
 			{
@@ -38,7 +38,7 @@ public class RoadInfo {
 		 * @param t
 		 * @return LeftCarsNum
 		 */
-		public int getLeftCarsNum(Road myRoad,float t) {
+		public static int getLeftCarsNum(Road myRoad,float t) {
 			int LeftCarsNum =0;
 			int CurCarsNum = getCurCarsNum(myRoad,t);
 			int SumCarsNum = myRoad.getLanesNum()*myRoad.getRoadLength();
@@ -53,7 +53,7 @@ public class RoadInfo {
 		 * @param t
 		 * @return
 		 */
-		public int getMinVelocity(Road myRoad,float t) {
+		public static int getMinVelocity(Road myRoad,float t) {
 			int MinSpeed = myRoad.getMaxRoadVelocity();
 			int tempSpeed = 0;
 			for (CarInOutPriority tempCar:myRoad.cars) 
@@ -61,7 +61,7 @@ public class RoadInfo {
 				if(t>tempCar.getInTime() && t<tempCar.getOutTime()) {
                     tempSpeed=tempCar.getCarVelocity();
 				}
-				if(tempSpeed<MinSpeed) {
+				if(tempSpeed<MinSpeed) {         //此处可优化最小速度
 					MinSpeed = tempSpeed;
 				}
 			}

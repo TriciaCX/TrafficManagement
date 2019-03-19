@@ -10,7 +10,6 @@ public class IOUtil {
      * @param filePath
      * @param spec 允许解析的最大行数， spec==null时，解析所有行
      * @return
-     * @author Lulu
      * @version 2019-3-15
      */
     public static String[] read(final String filePath, final Integer spec)
