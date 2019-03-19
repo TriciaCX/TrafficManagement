@@ -1,41 +1,49 @@
 package vo;
 
 public class CarInOutPriority {
-	private int carVelocity;
-	private float inTime;
-	private float outTime;
-	private String priority;
-	public CarInOutPriority(int carVelocity,float inTime,float outTime,String priority) {
-		this.setCarVelocity(carVelocity);
+
+	private Car car;
+	private int inTime;
+	private int outTime;
+	private int priority;//这个应该写成int
+	private int CarVelocity;
+	public CarInOutPriority(Car car,int inTime,int outTime,int priority,int CarVelocity) {
+		this.setCar(car);
 		this.inTime=inTime;
 		this.outTime=outTime;
 		this.priority=priority;
+		this.setCarVelocity(CarVelocity);
 	}
-	public float getInTime() {
+	public Car getCar() {
+		return car;
+	}
+	public void setCar(Car car) {
+		this.car = car;
+	}
+	public int getInTime() {
 		return inTime;
 	}
-	public void setInTime(float inTime) {
+	public void setInTime(int inTime) {
 		this.inTime = inTime;
 	}
-	public float getOutTime() {
+	public int getOutTime() {
 		return outTime;
 	}
-	public void setOutTime(float outTime) {
+	public void setOutTime(int outTime) {
 		this.outTime = outTime;
 	}
-	public String getPriority() {
+	public int getPriority() {
 		return priority;
 	}
-	public void setPriority(String priority) {
+	public void setPriority(int priority) {
 		this.priority = priority;
 	}
-	public int getCarVelocity()
-	{
-		return carVelocity;
+	public int getCarVelocity() {
+		return CarVelocity;
 	}
-	public void setCarVelocity(int carVelocity)
-	{
-		this.carVelocity = carVelocity;
+	public void setCarVelocity(int carVelocity) {
+		CarVelocity = carVelocity;
 	}
-
+	
+	
 }
