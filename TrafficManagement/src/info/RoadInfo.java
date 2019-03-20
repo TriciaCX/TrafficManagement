@@ -1,73 +1,78 @@
 package info;
 
-import vo.CarInOutPriority;
+import java.util.ArrayList;
+
+import vo.Car;
+import vo.Cross;
+import vo.Lane;
 import vo.Road;
 
 /**
- * getCurCarsNum(Road myRoad,float t)--返回在当前road上有多少辆车
- * getLeftCarsNum(Road myRoad,float t)--返回当前road还能进入多少辆车
- * getMinVelocity(Road myRoad,float t)--返回当前道路的最小速度
+ * getLeftCarsNum(Road myRoad,Cross fromCross, Cross toCross)--返回当前road的每一个lane还能进入多少辆车
  * @author Tricia
- * @version 2019-03-17
+ * @version 2019-03-19
  */
 public class RoadInfo {
-	   
-		/**
-		 * 返回在当前road上有多少辆车
-		 * 利用LinkedList<CarInOutPriority> cars中车的InTime和OutTime判断，已经进来，还没有走的，就是当前时刻在道路上的车
-		 * @param myRoad
-		 * @param t
-		 * @return CurCarsNum 
-		 */
-		public static int getCurCarsNum(Road myRoad,float t) {
-			int CurCarsNum = 0;
-			for (CarInOutPriority tempCar:myRoad.cars) 
-			{
-				if(t>tempCar.getInTime() && t<tempCar.getOutTime()) {
-					CurCarsNum++;
+
+
+
+	/**
+	 *  返回下一时刻road的每一条lane还能进入多少辆车,即车位于NextPos时还剩多少位置
+	 * LanesCarsList[0]=3,表示lane1的剩余可进入长度为3，还能进3辆车
+	 * @param myRoad
+	 * @param fromCross
+	 * @param toCross
+	 * @return LanesCarsList
+	 */
+	public static ArrayList<Integer> getLeftLanesLength(Road myRoad,Cross fromCross) {
+		ArrayList<Integer> LeftLanesLengthList = new ArrayList<Integer>();
+		boolean isDuplex  = myRoad.isDuplex();
+		int LeftLength = myRoad.getRoadLength();
+		int index=0;
+		//单向道路且车行驶方向与道路方向一致
+		if(!isDuplex && fromCross == myRoad.getFromCross()) {
+			for(Lane lane : myRoad.getLanes()) { //从road上得到lane
+				Car lastCar = lane.carsInLane.getLast();
+				if(lastCar.getNextPos()<myRoad.getRoadLength()-1&&lastCar.getNextPos()>=0) {
+					LeftLength = myRoad.getRoadLength()-1-lastCar.getNextPos();
+				}else if(lastCar.getNextPos()==-1) { 
+					LeftLength = myRoad.getRoadLength();
+				}
+				LeftLanesLengthList.add(index++, LeftLength);
+			}
+		}
+		else if(isDuplex) {//双向道路
+			if(fromCross == myRoad.getFromCross()) {//走1、2、3号lane(以lanesnum=3为例)
+				for(Lane lane : myRoad.getLanes()) {
+					Car lastCar = lane.carsInLane.getLast();
+					if(lastCar.getNextPos()<myRoad.getRoadLength()-1&&lastCar.getNextPos()>=0) {
+						LeftLength = myRoad.getRoadLength()-1-lastCar.getNextPos();
+					}else if(lastCar.getNextPos()==-1) { 
+						LeftLength = myRoad.getRoadLength();
+					}
+					LeftLanesLengthList.add(index++, LeftLength);
 				}
 			}
-			return CurCarsNum;
-		}
-	
-		
-		
-		/**
-		 * 返回当前road还能进入多少辆车
-		 * @param myRoad
-		 * @param t
-		 * @return LeftCarsNum
-		 */
-		public static int getLeftCarsNum(Road myRoad,float t) {
-			int LeftCarsNum =0;
-			int CurCarsNum = getCurCarsNum(myRoad,t);
-			int SumCarsNum = myRoad.getLanesNum()*myRoad.getRoadLength();
-			LeftCarsNum = SumCarsNum-CurCarsNum;
-			return LeftCarsNum;
-		}
-		
-		
-		/**
-		 * 返回当前道路的最小速度（下一辆进入的车的最大实际行驶速度）
-		 * @param myRoad
-		 * @param t
-		 * @return
-		 */
-		public static int getMinVelocity(Road myRoad,float t) {
-			int MinSpeed = myRoad.getMaxRoadVelocity();
-			int tempSpeed = 0;
-			for (CarInOutPriority tempCar:myRoad.cars) 
-			{
-				if(t>tempCar.getInTime() && t<tempCar.getOutTime()) {
-                    tempSpeed=tempCar.getCarVelocity();
+			else if(fromCross == myRoad.getToCross()) {//走4、5、6号lane(以lanesnum=3为例)
+				for(int i=0;i< myRoad.getLanesNum();i++) {
+					LeftLanesLengthList.add(i, 0);
 				}
-				if(tempSpeed<MinSpeed) {         //此处可优化最小速度
-					MinSpeed = tempSpeed;
+				index = myRoad.getLanesNum();
+				for(Lane lane : myRoad.getLanes()) {
+					Car lastCar = lane.carsInLane.getLast();
+					if(lastCar.getNextPos()<myRoad.getRoadLength()-1&&lastCar.getNextPos()>=0) {
+						LeftLength = myRoad.getRoadLength()-1-lastCar.getNextPos();
+					}else if(lastCar.getNextPos()==-1) { 
+						LeftLength = myRoad.getRoadLength();
+					}
+					LeftLanesLengthList.add(index++, LeftLength);
 				}
 			}
-			return MinSpeed;
 		}
-
-	
-
-}
+		else {
+			return null;
+		}
+		return LeftLanesLengthList;
+	}
+}		
+		
