@@ -1006,13 +1006,14 @@ public class RunUtil2 {
 
 	protected static void adjustW(float[] w) {
 		if(Main.numOf2!=0) {
-			w[2]=sigmoid(100*Main.numOf5/Main.numOf2);
+			w[1]=sigmoid(100*Main.numOf5/Main.numOf2);
 		}
 		else 
-			w[2]=sigmoid(100*Main.numOf5/(Main.numOf2+1));
-		w[1]=(float) ((float) w[2]*0.5);
+			w[1]=sigmoid(100*Main.numOf5/(Main.numOf2+1));
+		w[2]=(float) ((float) w[1]*0.5);
 		w[0]=1-w[1]-w[2];
-		w[2]*=2;
+		w[1]*=10;
+//		w[2]*=10;
 	}
 
 
