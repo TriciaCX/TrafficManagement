@@ -24,11 +24,8 @@ public class RunUtil2 {
 	/**
 	 * 更新从车库出发的车的信息，判断车是否能够插入到规划的道路中，如果能，查看ID优先级是否冲突，有冲突则看
 	 * 是否有回退的车（存入reArrangeCars中），如果不能，直接加到存入reArrangeCars中
-	 * 
 	 * @param car：当前车；road：要走的道路；virtualCarsHashMap：存好的车的原始状态；reArrangeCars：回退车辆集合，就是可能会有ID小但是速度快的车被先从车库里面取出来，在同一时刻，起始路口相同，要选择的道路也是一条，这时候就要回退了；MapRoad：用来返回对象的
 	 * @return 这里返回两个元素，false:第一个插不进去，第二个：有没有回滚？没有
-	 * @author lulu
-	 * @version 2019-3-28
 	 */
 	protected static boolean[] checkIDPriority(Car car, Road road, 
 			LinkedList<Car> reArrangeCars, HashMap<String, Road> MapRoad, int t) {
@@ -82,9 +79,8 @@ public class RunUtil2 {
 			}
 			// 如果从上面这个循环里面出来的话，就说明要么被我掏完了，要么就是不用掏了
 
-		}//每个lane都被我掏完了 
+		}
 
-		// 被上一个函数调用，3.28版本你要自己判断一下可不可以进去的，儿子！
 		// 插进去这个车，并且更新相关信息
 		flag1 = carIDInsertToRoad(car, road, MapRoad, t);
 		if (!flag1)// 如果这个车插不进去的,也放到重新安排的车的集合里,外面会再安排一次,再不行就放到garageFrozon里
@@ -124,8 +120,6 @@ public class RunUtil2 {
 	 * 
 	 * @param car：当前车；road：要走的道路；virtualCarsHashMap；MapRoad：用来返回对象的；
 	 * @return 这里返回一个元素，false:插不进去
-	 * @author Lulu
-	 * @version 2019-3-28
 	 */
 	protected static boolean carIDInsertToRoad(Car car, Road road,
 			HashMap<String, Road> MapRoad, int t) {
@@ -142,8 +136,6 @@ public class RunUtil2 {
 	 * 
 	 * @param car：当前车；road：要走的道路；virtualCarsHashMap：当前时刻的影分身们！MapRoad：用来返回对象的；reArrangeCars：回退车辆集合，其实就是之前村的初始影分身；
 	 * @return 这里返回一个元素，false:插不进去
-	 * @author Lulu
-	 * @version 2019-3-26
 	 */
 	protected static boolean InsertFreshCarToRoad(Car c, Road road,
 			HashMap<String, Road> MapRoad, int t) {
@@ -209,8 +201,6 @@ public class RunUtil2 {
 		/**
 		 * 简单的信息更新
 		 */
-//		if(nextLaneOfRoadLeftSize<10)
-//			System.out.println("前方有车");
 
 		car.setCurPos(road.getRoadLength() - Math.min(nextLaneOfRoadLeftSize, nextLaneVel));// 这个可以根据page10得到了
 		car.setLaneID(i);
@@ -270,8 +260,6 @@ public class RunUtil2 {
 	 * 
 	 * @param car：被退回来的车；road：本来要走的道路；
 	 * @return 有没有成功插入
-	 * @author Lulu
-	 * @version 2019-3-26
 	 */
 	protected static boolean reArrangeCarsIDInsertToRoad(Car car, Road road, HashMap<String, Road> MapRoad, int t) {
 		boolean flag = InsertFreshCarToRoad(car, road,  MapRoad, t);
@@ -281,12 +269,8 @@ public class RunUtil2 {
 
 	/**
 	 * 对四个车进行一系列操作，
-	 * 
 	 * *@param carsFour最多只有四个车
-	 * 
 	 * @return
-	 * @author Lulu
-	 * @version 2019-3-26
 	 */
 	public static void FourCarStatePreProcess(LinkedList<Car> carsFour) {
 		for (Car c : carsFour) {
@@ -331,12 +315,8 @@ public class RunUtil2 {
 
 	/**
 	 * 对四个车进行一系列操作，
-	 * 
-	 * *@param carsFour最多只有四个车，而且只有两种状态，要么就是1要么就是2.
-	 * 
+	 * @param carsFour最多只有四个车，而且只有两种状态，要么就是1要么就是2.
 	 * @return
-	 * @author Lulu
-	 * @version 2019-3-26
 	 */
 	public static void FourCarStateProcess(LinkedList<Car> carsFour, int t) {
 		ArrayList<Car> cars1 = new ArrayList<>();
@@ -369,11 +349,7 @@ public class RunUtil2 {
 
 	/**
 	 * 对这个路口取出这时候安排的那4辆车
-	 * 
-	 * *@param carsFour最多只有四个车
-	 * 
-	 * @return
-	 * @author Lulu
+	 * @param carsFour最多只有四个车
 	 * @version 2019-3-26
 	 */
 	public static LinkedList<Car> extractFourCar(Cross s) {
@@ -406,10 +382,8 @@ public class RunUtil2 {
 	/**
 	 * 根据一条路上,车是否出路口，lane的顺序和lane上车辆距离目的路口的距离，构建车的链表，不考虑hasArrangeOrNot为true的车
 	 * （首先考虑是否出路口，然后考虑距离，最后考虑车道顺序）
-	 * 
 	 * @param road：当前道路;crossID:车从哪个路口到这个路;
 	 * @return 获得当前道路和车辆行驶方向相同的所有lane上车辆的发车顺序链表。getfirst是先出发的车（头头）
-	 * @author Dalton
 	 * @version 2019.3.28
 	 */
 	public static LinkedList<String> getCarInRoad(Road road, String crossID) {
@@ -513,10 +487,8 @@ public class RunUtil2 {
 
 	/**
 	 * 找出车辆的CurPos最小的车辆
-	 * 
 	 * @param carList 车辆集合
 	 * @return CurPos最小的车辆
-	 * @author Dalton
 	 * @version 2019.3.26
 	 */
 	protected static Car minCarCurPos(Car[] carList) {
@@ -541,9 +513,7 @@ public class RunUtil2 {
 	/**
 	 * 对状态5的firstCar之后的车更新状态 firstCar能够过路口，变为1，这种时候不能调用我
 	 * 3条路都过不去，变为5，后面的车变为4，我是为这种情况服务的
-	 * 
 	 * @param firstCar
-	 * @author Tricia
 	 * @version 2019.03.26
 	 */
 //	protected static void UpdateCarsBehindFirstCarAtState5(Car firstCar) {
@@ -612,11 +582,8 @@ public class RunUtil2 {
 
 	/**
 	 * 对车遍历，是不是都是真实的位置了
-	 * 
-	 * *@param hasArrag=true,sheng=o
-	 * 
+	 * @param hasArrag=true,sheng=o
 	 * @return
-	 * @author Lulu
 	 * @version 2019-3-26
 	 */
 	public static boolean isAllReal() {
@@ -642,11 +609,6 @@ public class RunUtil2 {
 
 	/**
 	 * 对车遍历，是不是都是已经到达终点了
-	 * 
-	 * *@param
-	 * 
-	 * @return
-	 * @author Lulu
 	 * @version 2019-3-26
 	 */
 	public static boolean isAllArrived() {
@@ -661,16 +623,11 @@ public class RunUtil2 {
 		return sum == Main.listCar.size();
 	}
 
-	/*
+	/**
 	 * 查询当前道路是否是真正有可走的空间，因为需要先走车道号小的车道。 小车道没空间，但车没有更新过直接判为没路； 没更新有空间则有路；
 	 * 更新过没空间继续查找大的lane； 更新过有空间为有路；
-	 * 
 	 * @param road:当前搜索的道路 ;crossID:出发节点ID
-	 * 
 	 * @return -2:所有lane都更新过了,也没有空间；-1：未更新过而没有空间；1：未更新过而有空间；2：更新过而有空间；
-	 * 
-	 * @author Dalton
-	 * 
 	 * @version 2019.3.27
 	 */
 	protected static int hasLeftLength(Road road, String CrossID) {
@@ -707,15 +664,10 @@ public class RunUtil2 {
 		return -2;// 所有lane都更新过了,也没有空间
 	}
 
-	/*
+	/**
 	 * 查询当前搜索的道路和车的方向是否冲突
-	 * 
 	 * @param road:当前搜索道路；crossID:出发节点ID
-	 * 
-	 * @return true：方向一致；false：方向相反
-	 * 
-	 * @author Dalton
-	 * 
+	 * @return true：方向一致；false：方向相反 
 	 * @version 2019.3.22
 	 */
 	protected static boolean isDirectionRight(Road road, String crossID) {
@@ -728,15 +680,10 @@ public class RunUtil2 {
 			return true;
 	}
 
-	/*
+	/**
 	 * 从车库中止中取出可以出发的车放入garageWait
-	 * 
 	 * @param cars：车库中止车辆集合cars，t：当前时间（t-t+1）
-	 * 
 	 * @return
-	 * 
-	 * @author Dalton
-	 * 
 	 * @version 2019.3.26
 	 */
 	protected static void classifyCars(LinkedList<Car> cars, int t) {
@@ -745,7 +692,6 @@ public class RunUtil2 {
 
 		garageWait.clear();
 
-//		Iterator<Car> carIter = cars.iterator();
 		for (int i = cars.size() - 1; i >= 0; i--) {
 			Car car = cars.get(i);
 			car.setHasArrangedOrNot(false);
@@ -754,13 +700,6 @@ public class RunUtil2 {
 				cars.remove(i);
 			}
 		}
-//		while (carIter.hasNext()) {
-//			Car car = carIter.next();
-//			car.setHasArrangedOrNot(false);// 设置安排标志位为未安排
-//			if (car.getPlanTime() <= t) {
-//				garageWait.add(car);// 车辆计划出发时间大于当前时间，车库中止
-//			}
-//		}
 
 		Collections.sort(garageWait, new Comparator<Car>() {// 按车辆速度升序排列
 			@Override
@@ -770,15 +709,11 @@ public class RunUtil2 {
 		});
 	}
 
-	/*
+	/**
 	 * 对当前车辆规划下一道路
-	 * 
 	 * @param car：当前车辆（两个等待状态）
-	 * 
 	 * @return 下一条道路
-	 * 
-	 * @author Dalton
-	 * 
+	 * @author Dalton 
 	 * @version 2019.3.28 保证第一条路可走（考虑rest），从car.getCurToCross开始找路径
 	 * 可以进一步优化：此时第一条路不能走不一定真的在该时刻不能走，需要安排完一些车后可能会有空间
 	 */
@@ -845,15 +780,10 @@ public class RunUtil2 {
 		return findFirstRoad(s.getCrossID(), t.getCrossID());
 	}
 
-	/*
+	/**
 	 * 从unknown中标记第一跳可行节点 ，不标记没有的路，方向不对的路，过来的路 对于没空间的路，都标记cost，不管是更新过没空间还是没更新过没空间
-	 * 
-	 * @param unknown:搜索路径的未知节点集合；car：当前安排车辆；roads：当前搜索道路集合；preRoad：车当前所在道路
-	 * 
+	 * @param unknown:搜索路径的未知节点集合；car：当前安排车辆；roads：当前搜索道路集合；preRoad：车当前所在道路 
 	 * @return true:有路可走（不一定当前可走，可能更新完后能走，也可能下个时间片才能走）
-	 * 
-	 * @author Dalton
-	 * 
 	 * @version 2019.3.28
 	 */
 	protected static boolean deleteCrossFromUnknown(List<Cross> unknown, Car car, List<Road> roads, Road preRoad) {
@@ -902,13 +832,9 @@ public class RunUtil2 {
 		return true;
 	}
 
-	/*
+	/**
 	 * @param 找到从路口s到路口t的道路
-	 * 
 	 * @return Road实例
-	 * 
-	 * @author lulu
-	 * 
 	 * @version 2019-3-22
 	 */
 	protected static Road findRoad(String crossSID, String crossTID) {
@@ -938,7 +864,8 @@ public class RunUtil2 {
 			float NormalizedRoadLength = RunUtil2.getNormalizedRoadLength(road, Main.maxRoadLength);// cost1
 			float NormalizedRoadLeftLength = CrossInfo.getNormalizedRoadLeftLength(road, s.getCrossID());// cost2
 			float sigmoidCrossCarNum = swish(CrossInfo.getCrossCarNum(s.getCrossID(), t.getCrossID()));// cost3
-			float cost = Main.w[0] * NormalizedRoadLength + Main.w[1] * NormalizedRoadLeftLength + Main.w[2] * sigmoidCrossCarNum;
+			float cost = Main.w[0] * NormalizedRoadLength + Main.w[1] *(NormalizedRoadLeftLength) + Main.w[2] * sigmoidCrossCarNum;
+
 			if (s.cost + cost < t.cost) {
 				t.cost = s.cost + cost;
 				t.preCross = s;
@@ -947,15 +874,10 @@ public class RunUtil2 {
 		adjustW(Main.w);
 	}
 
-	/*
+	/**
 	 * 根据道路road以及当前路口找到道路通向的下一路口
-	 * 
 	 * @param road：当前道路；s:当前路口
-	 * 
 	 * @return 通向的下一路口
-	 * 
-	 * @author Dalton
-	 * 
 	 * @version 2019.3.22
 	 */
 	protected static Cross getCross(Road road, String sID) {
@@ -974,7 +896,6 @@ public class RunUtil2 {
 	 * @param sID:当前出发路口ID
 	 * @param tID：目的路口ID
 	 * @return 从当前出发路口出发的第一条道路
-	 * @author Dalton
 	 * @version 2019.3.22
 	 */
 	protected static Road findFirstRoad(String sID, String tID) {
@@ -989,11 +910,7 @@ public class RunUtil2 {
 
 	/*
 	 * sigmoid函数
-	 * 
 	 * @param x:自变量
-	 * 
-	 * @author Dalton
-	 * 
 	 * @version 2019.3.22
 	 */
 	protected static float sigmoid(int x) {
@@ -1010,19 +927,16 @@ public class RunUtil2 {
 		}
 		else 
 			w[1]=sigmoid(100*Main.numOf5/(Main.numOf2+1));
-		w[2]=(float) ((float) w[1]*0.5);
+     	w[2]=(float) ((float) w[1]*0.5);
 		w[0]=1-w[1]-w[2];
 		w[1]*=10;
-//		w[2]*=10;
 	}
 
 
 	/**
 	 * cost1
-	 * 
 	 * @param road
 	 * @return NormalizedRoadLength
-	 * @author Tricia
 	 * @version 2019-3-21
 	 */
 	protected static float getNormalizedRoadLength(Road road, int maxRoadLength) {
@@ -1035,31 +949,46 @@ public class RunUtil2 {
 	/**
 	 * 将State3:firstCar所处的road上的车的状态更新 需要更新状态信息，不更新位置信息
 	 * 如果firstCar能过路口，state=1,后面的车state=3;firstCar不能过路口，state=2,后面的车state=4
-	 * 
 	 * @param firstCar
-	 * @author Tricia
 	 * @version 2019-3-27
 	 */
 
 	protected static void UpdateRoadForCarsAtState3(String firstCarID) {
-//		if(firstCarID.equals("10037")) {
-//			System.out.println("");
-//		}
+
 		Car firstCar = Main.MapCar.get(firstCarID);
 		Road carInRoad = Main.MapRoad.get(firstCar.getRoadID()); // car行驶的路
-		String crossID = firstCar.getCurFromCrossID();
+		//String crossID = firstCar.getCurFromCrossID();
 		int maxSpeed = Math.min(firstCar.getMaxVelocity(), carInRoad.getMaxRoadVelocity()); // firstCar此时的行驶速度
 		// 判断firstCar是否过路口
 		// ***********更新firstCar的状态
-		// firstCar.setCurPos(firstCar.getCurPos()-maxSpeed);//State3的车不更新t3时刻的curPos
 		if (firstCar.getCurPos() - maxSpeed < 0) { // 如果能够过路口
 			firstCar.setState(1);
 		} else { // 如果不能过路口
 			firstCar.setState(2);
 		}
-		int firstCarState = firstCar.getState();
+		int firstCarState = firstCar.getState(); //保存firstCar的state
+		
 		// **********更新Road上其它车的状态（如果不止有一辆的话）
-		LinkedList<String> carInRoadList = getCarInRoad(carInRoad, crossID); // carInRoadList里存储的是car的ID
+		//LinkedList<String> carInRoadList = getCarInRoad(carInRoad, crossID); // carInRoadList里存储的是car的ID
+		
+		//0412更新，我们要更新这条路上所有车的状态，不只是没更新过的车。
+		LinkedList<String> carInRoadList = new LinkedList<String>();
+		LinkedList<Lane> carInLane = new LinkedList<Lane>();
+		if(firstCar.getCurFromCrossID().equals(carInRoad.getFromCrossID())) {
+		    carInLane = carInRoad.getForwardLane();	
+		}else {
+			carInLane = carInRoad.getBackwardLane();
+		}
+		LinkedList<Car> carInLanel = new LinkedList<Car>();
+		for(Lane l:carInLane) {
+			carInLanel = l.carsInLane;
+			if(carInLanel.size()!=0) {
+				for(Car car:carInLanel) {
+				   carInRoadList.add(car.getCarID());
+				}
+			}
+		}
+		
 		int carInRoadNum = carInRoadList.size();
 		int state = 0;
 		if (firstCar.getState() == 1) {
@@ -1067,21 +996,13 @@ public class RunUtil2 {
 		} else {
 			state = 4;
 		}
-
-//			if(carInRoadNum>1) {//如果不止有一辆车
-//			    for(int i=1;i<carInRoadNum;i++) { //可优化为迭代器
-
-//					   //统一更新属性
-//					 Main.MapCar.get(carInRoadList.get(i)).setState(state);
-//				 }
-//		    }
 		// 优化为迭代器遍历
 		if (carInRoadNum > 1) {// 如果不止有一辆车
 			Iterator<String> it = carInRoadList.iterator();
 			while (it.hasNext()) {
 				Main.MapCar.get(it.next()).setState(state);// 设置所有车的state
 			}
-			firstCar.setState(firstCarState); // 迭代器遍历的时候是无序的，需要重新设置firstCar的状态
+			firstCar.setState(firstCarState); // 重新设置firstCar的状态
 		}
 	}
 
@@ -1163,9 +1084,7 @@ public class RunUtil2 {
 
 	/**
 	 * 将firstCar所处的lane上的车从t2时刻更新到t3时刻
-	 * 
 	 * @param firstCar
-	 * @author Lulu
 	 * @version 2019.03.27
 	 */
 
@@ -1178,10 +1097,8 @@ public class RunUtil2 {
 
 	/**
 	 * 从t2时刻更新到t3时刻
-	 * 
 	 * @param firstCarID
 	 * @param t
-	 * @author Tricia
 	 * @version 2019-03-27
 	 */
 
@@ -1212,12 +1129,10 @@ public class RunUtil2 {
 
 			laneInvlovesCar.carsInLane.removeFirst(); // $$$$$$将到家的Car从lane上去掉$$$$$$
 			
-			//今天新加的
 			//判断firstCar是不是这条路上的唯一一个
 			String nextCarID = getFirstCarInRoad(carInRoad,firstCar.getCurFromCrossID());
 			if(nextCarID==null) {
 				setCarInRoad(null, firstCar, carInRoad, 3, false, true, true, false, false);
-				//更新！！浩杰的函数
 			}
 		}
 		// **********情况2：能过路口，到别的路上
@@ -1226,7 +1141,6 @@ public class RunUtil2 {
 //			laneInvlovesCar.carsInLane.removeFirst(); // $$$$将离开这条路的Car从lane上去掉$$$$$
 //			String nextCarID = getFirstCarInRoad(carInRoad,firstCar.getCurFromCrossID());
 //			if(nextCarID==null) {
-//				//更新！！浩杰的函数
 //				setCarInRoad(null, firstCar, carInRoad, 3, false, true, true, false, false);
 //			}
 			// 下面就是跑到别的路了
@@ -1321,8 +1235,20 @@ public class RunUtil2 {
 				// case2.2：该lane上car的前方没有车，但该road上有车
 
 				else {
-					LinkedList<String> carInNextRoadID = getCarInRoad(nextRoad, firstCar.getCurToCrossID());
-					if (carInNextRoadID.isEmpty()) {// case2.1:该road上也没有车
+					//LinkedList<String> carInNextRoadID = getCarInRoad(nextRoad, firstCar.getCurToCrossID());//4.12-我们不能只看没更新状态的车！！！！
+					
+					//其实我们只需要看每个lane上的第一辆车就行
+					//0412更新，我们要更新这条路上所有车的状态，不只是没更新过的车。
+					ArrayList<String> carInNextRoadID = new ArrayList<String>();
+					LinkedList<Car> carInNextLanel = new LinkedList<Car>();
+					for(Lane l:carInNextLanes) {
+						carInNextLanel = l.carsInLane;
+						if(carInNextLanel.size()!=0) {
+						   carInNextRoadID.add(carInNextLanel.getFirst().getCarID());
+						}
+					}
+					
+					if (carInNextRoadID.isEmpty()) {// case2.1:该road上也没有车   原来写的是carInNextRoadID.isEmpty()，注意我们的firstcar现在还不在这条路上！！！！！
 						// 1、设置位置 curPos
 						int hasJumpDis = firstCar.getCurPos();
 						firstCar.setCurPos(nextRoad.getRoadLength() - (firstCarSpeed - hasJumpDis));
@@ -1340,33 +1266,85 @@ public class RunUtil2 {
 						firstCar.setCurPos(nextRoad.getRoadLength() - (firstCarSpeed - hasJumpDis));
 						// 2、设置状态
 						// 要找该road上在firstcar之前的车
-						Car preRoadCar = Main.MapCar.get(carInNextRoadID.getFirst());
-						if (preRoadCar.getCurPos() < firstCar.getCurPos()) { // firstcar在road原来车的后面
-							if (preRoadCar.getState() == 1) {
-								firstCar.setState(3);
-							} else if (preRoadCar.getState() == 2) {
-								firstCar.setState(4);
-							} else {
-								firstCar.setState(preRoadCar.getState());
+						Car preRoadCar = Main.MapCar.get(carInNextRoadID.get(0)); //我们取出的是整个路上的第一个car
+						
+						//0412我们需要取得整个路上真正的头车，此时是没有我们的firstcar的，它还没加进来呢！！！（但firstcar所在的lane上木有别的car了）
+						if(carInNextRoadID.size()>1) {
+						  for(int i=1;i<carInNextRoadID.size();i++) {
+						    //先判断这辆车能不能过路口
+							Car car1 = Main.MapCar.get(carInNextRoadID.get(i));
+							int car1Speed = Math.min(car1.getMaxVelocity(), nextRoad.getMaxRoadVelocity());
+							int preRoadCarSpeed = Math.min(preRoadCar.getMaxVelocity(), nextRoad.getMaxRoadVelocity());
+                            //能过路口，且位置在preRoadCar前面，且preRoadCar不能过路口,将car1变为preCar
+							if(car1.getCurPos()<car1Speed && car1.getCurPos()<preRoadCar.getCurPos()&&preRoadCar.getCurPos()>=preRoadCarSpeed) {
+								preRoadCar = car1;
 							}
-						} else if (preRoadCar.getCurPos() == firstCar.getCurPos()
-								&& firstCar.getLaneID() > preRoadCar.getLaneID()) {// firstcar和road原来第一辆车同一水平线，需要比较laneID
-
-							if (preRoadCar.getState() == 1) {
-								firstCar.setState(3);
-							} else if (preRoadCar.getState() == 2) {
-								firstCar.setState(4);
-							} else {
-								firstCar.setState(preRoadCar.getState());
-							}
-						} else {// firstCar在这条Road的最前面
-								// 判断该车t3时刻是否能过路口
-							if (firstCar.getCurPos() < firstCarSpeed) {// 能过路口是1
+						  }
+						}
+						int preRoadCarSpeed = Math.min(preRoadCar.getMaxVelocity(), nextRoad.getMaxRoadVelocity());
+						
+						//得到preCar之后，首先看firstCar能不能过路口
+						if (firstCar.getCurPos() < firstCarSpeed) { //firstCar能过路口
+							if(preRoadCar.getCurPos()<preRoadCarSpeed) { //preRoadCar能过路口
+								//比较两者的laneID
+								if(firstCar.getLaneID()<firstCar.getLaneID()) {//firstCar称为这条路的头车
+									firstCar.setState(1);
+								}else if(firstCar.getLaneID()==firstCar.getLaneID()) {
+									System.out.println("出现我状态1就错了");
+								}else {//firstCar的laneID大于preRoadCar，preRoadCar是这条路的头车
+									firstCar.setState(3);
+								}
+							}else {//preRoadCar不能过路口
+								//firstCar称为这条路的头车
 								firstCar.setState(1);
-							} else {// 不能过路口是2
-								firstCar.setState(2);
+							}
+						}else {//firstCar不能过路口
+							if(preRoadCar.getCurPos()<preRoadCarSpeed) {//preRoadCar能过路口
+								//preRoadCar是这条路的头车
+								firstCar.setState(3);
+							}else {//preRoadCar不能过路口
+								if(firstCar.getLaneID()<firstCar.getLaneID()) {
+									//firstCar成为头车
+									firstCar.setState(2);
+								}else if(firstCar.getLaneID()==firstCar.getLaneID()) {
+									System.out.println("出现我状态1就错了");
+								}else {//firstCar的laneID大于preRoadCar，preRoadCar是这条路的头车
+									firstCar.setState(4);
+								}
 							}
 						}
+						
+						
+						
+						
+						
+						
+//						if (preRoadCar.getCurPos() < firstCar.getCurPos()) { // firstcar在road原来车的后面
+//							if (preRoadCar.getState() == 1) {
+//								firstCar.setState(3);
+//							} else if (preRoadCar.getState() == 2) {
+//								firstCar.setState(4);
+//							} else {
+//								firstCar.setState(preRoadCar.getState());
+//							}
+//						} else if (preRoadCar.getCurPos() == firstCar.getCurPos()
+//								&& firstCar.getLaneID() > preRoadCar.getLaneID()) {// firstcar和road原来第一辆车同一水平线，需要比较laneID
+//
+//							if (preRoadCar.getState() == 1) {
+//								firstCar.setState(3);
+//							} else if (preRoadCar.getState() == 2) {
+//								firstCar.setState(4);
+//							} else {
+//								firstCar.setState(preRoadCar.getState());
+//							}
+//						} else {// firstCar在这条Road的最前面
+//								// 判断该车t3时刻是否能过路口
+//							if (firstCar.getCurPos() < firstCarSpeed) {// 能过路口是1
+//								firstCar.setState(1);
+//							} else {// 不能过路口是2
+//								firstCar.setState(2);
+//							}
+//						}
 
 					}
 
@@ -1375,12 +1353,12 @@ public class RunUtil2 {
 				laneInvlovesCar.carsInLane.removeFirst(); // $$$$将离开这条路的Car从lane上去掉$$$$$
 				String nextCarID = getFirstCarInRoad(carInRoad,firstCar.getCurFromCrossID());
 				if(nextCarID==null) {
-					//更新！！浩杰的函数
 					setCarInRoad(null, firstCar, carInRoad, 3, false, true, true, false, false);
 				}
 
 				// ------统一更新信息
 				carInNextLanes.get(firstCar.getLaneID()).carsInLane.add(firstCar); // $$$$$把car加到这个lane上$$$$$
+				
 				firstCar.setHasArrangedOrNot(true); // 更新标志位
 				firstCar.setRoadID(nextRoadID);
 				firstCar.setCurFromCrossID(firstCar.getCurToCrossID());
@@ -1396,23 +1374,18 @@ public class RunUtil2 {
 
 	/**
 	 * 将firstCar所处的lane上的车从t2时刻更新到t3时刻
-	 * 
 	 * @param firstCar
-	 * @author Lulu
 	 * @version 2019.03.27
 	 */
 
 	public static void UpdateLaneForCarsAtState2(ArrayList<Car> car2s) {
-
 		for (Car c : car2s)
 			UpdateRoadForCarsAtState2(c.getCarID());
 	}
 
 	/**
 	 * 更新状态2的车所在的路
-	 * 
 	 * @param firstCarID
-	 * @author Tricia
 	 * @version 2019-03-28
 	 */
 	protected static void UpdateRoadForCarsAtState2(String firstCarID) {
@@ -1428,9 +1401,7 @@ public class RunUtil2 {
 	/**
 	 * firstCar State2 nextRoadID!=-1 是去不了的1变来的 将firstCar所处的Road上的车从t2时刻更新到t3时刻
 	 * 更新State、curPos、sheng、hasArrangedOrNot 找出road上所有lane上的“firstCar”,更新每一个lane
-	 * 
 	 * @param firstCarID
-	 * @author Tricia
 	 * @version 2019-3-28
 	 */
 	protected static void UpdateRoadForCarsAtState2Super(String firstCarID) {
@@ -1478,9 +1449,7 @@ public class RunUtil2 {
 	/**
 	 * firstCar State2 nextRoadID==-1 普通情况 将firstCar所处的Road上的车从t2时刻更新到t3时刻
 	 * 更新State、curPos、sheng、hasArrangedOrNot 找出road上所有lane上的“firstCar”,更新每一个lane
-	 * 
 	 * @param firstCarID
-	 * @author Tricia
 	 * @version 2019-3-28
 	 */
 
@@ -1540,9 +1509,7 @@ public class RunUtil2 {
 
 	/**
 	 * 将firstCar所处的lane上的车的位置从t2时刻更新到t3时刻 更新curPos、sheng
-	 * 
 	 * @param firstCarID
-	 * @author Tricia
 	 * @version 2019-3-28
 	 */
 
@@ -1614,11 +1581,9 @@ public class RunUtil2 {
 
 	/**
 	 * 将lanefirstCar所处的lane上的车的状态从t2时刻更新到t3时刻 需要更新的信息有：hasArrangedOrNot,State
-	 * 
 	 * @param laneFirstCarID
 	 * @param newFirstCarID
 	 * @param followingState
-	 * @author Tricia
 	 * @version 2019.03.28
 	 */
 	protected static void UpdateLaneStateForCarsAtState2(String laneFirstCarID, String newFirstCarID,int followingState) {
@@ -1656,13 +1621,9 @@ public class RunUtil2 {
 
 	}
 
-	/*
+	/**
 	 * @param 找到从路from通过路口c到路to
-	 * 
 	 * @return 这个转弯的优先级
-	 * 
-	 * @author lulu
-	 * 
 	 * @version 2019-3-20
 	 */
 	protected static int setPriority(String fromRoadID, String toRoadID, String crossID) {
@@ -1693,11 +1654,8 @@ public class RunUtil2 {
 
 	}
 
-	/*
+	/**
 	 * 安排过本来就在路上走的车之后，要安排从车库来的车了，安排以后，统一把它的标志位设置成true,同时要把从车库来的车加到在路上的车里去
-	 * 
-	 * @author lulu
-	 * 
 	 * @version 2019-3-27
 	 */
 	public static void setNowInRoadCarFromGarageWait() {
@@ -1706,43 +1664,13 @@ public class RunUtil2 {
 			Car c = carIt.next();
 			c.setHasArrangedOrNot(true);
 			c.setPriority(3);
-			Main.NowInRoadCar.add(c);
-//			if(c.getRoadID().equals("-1")) {
-//				Main.garageFrozen.add(c);
-////				Main.garageWait.remove(c);//这样remove不掉
-//				ProcessObject po = new ProcessObject();
-//				po.remove(c, (Car cb) -> {
-//					
-//					
-//						
-//					Iterator<Car> it = Main.garageWait.iterator();
-//					while (it.hasNext()) {
-//						Car cc = it.next();
-//						if (cb.getCarID().equals(cc.getCarID())) {
-//							Main.garageWait.remove(cc);
-//							break;
-//						}
-//					}
-//
-//				});
-//			}
-//			else {
-//				c.setHasArrangedOrNot(true);
-//				c.setPriority(3);
-//				Main.NowInRoadCar.add(c);
-//				
-//			}
-				
-			
+			Main.NowInRoadCar.add(c);							
 		}
 
 	}
 
-	/*
+	/**
 	 * 一个时间片的末尾，将所有在路上行走的车的是否安排过都要置为false
-	 * 
-	 * @author lulu
-	 * 
 	 * @version 2019-3-27
 	 */
 	protected static void setNowInRoadCarFalse() {
@@ -1754,11 +1682,8 @@ public class RunUtil2 {
 
 	}
 
-	/*
+	/**
 	 * 一个时间片的末尾，将所有在路上行走的车的是否安排过都要置true
-	 * 
-	 * @author lulu
-	 * 
 	 * @version 2019-3-27
 	 */
 	protected static void setNowInRoadCarTrue() {
@@ -1770,11 +1695,8 @@ public class RunUtil2 {
 
 	}
 
-	/*
-	 * 用来输出车的状态，来debug
-	 * 
-	 * @author lulu
-	 * 
+	/**
+	 * 用来输出车的状态，来debug 
 	 * @version 2019-3-28
 	 */
 	public static void testShowCarInfoset(HashSet<Car> cs) {
@@ -1789,11 +1711,8 @@ public class RunUtil2 {
 
 	}
 
-	/*
+	/**
 	 * 用来输出车的状态，来debug
-	 * 
-	 * @author lulu
-	 * 
 	 * @version 2019-3-28
 	 */
 	public static void testShowCarInfo(LinkedList<Car> cs) {
@@ -1807,11 +1726,8 @@ public class RunUtil2 {
 		}
 
 	}
-	/*
+	/**
 	 * 用来输出车的状态，来debug
-	 * 
-	 * @author lulu
-	 * 
 	 * @version 2019-3-28
 	 */
 	public static void testShowCarInfo(HashSet<Car> cs) {
@@ -1826,11 +1742,8 @@ public class RunUtil2 {
 
 	}
 
-	/*
+	/**
 	 * 用来输出路的状态，来debug
-	 * 
-	 * @author lulu
-	 * 
 	 * @version 2019-3-28
 	 */
 	public static void testShowRoadInfo() {
@@ -1843,11 +1756,8 @@ public class RunUtil2 {
 
 	}
 
-	/*
+	/**
 	 * 用来输出路的状态，来debug
-	 * 
-	 * @author lulu
-	 * 
 	 * @version 2019-3-28
 	 */
 	public static void testShowRoadInfo(String s) {
@@ -1868,10 +1778,8 @@ public class RunUtil2 {
 	}
 
 	/**
-	 * 
 	 * @param firstCarID
 	 * @return mapFirstCarInLanes(laneID,carID)
-	 * @author Tricia
 	 * @version 2019-3-28
 	 */
 
@@ -1948,9 +1856,7 @@ public class RunUtil2 {
 	 * 更新状态5的road上每一条lane上car，注意：每个Lane的第一辆car的状态需要自己更新，本函数不负责
 	 * 更新curPos、sheng、state、hasArrangedOrNot
 	 * ！！！！注意：本函数认为，本来能过路口的车，因为前车不能过路口了（前车原来也是等待车），原地不动
-	 * 
 	 * @param firstCar
-	 * @author Tricia
 	 * @version 2019.03.28
 	 */
 //	protected static void UpdateCarsBehindFirstCarAtState5(String firstCarID) {
@@ -2016,13 +1922,11 @@ public class RunUtil2 {
 //	}
 	/**
 	 * 在一个车辆集合中选出能过路口的车
-	 * 
 	 * @param road     当前的道路
 	 * @param carList  需要判断是否通过路口的车集合
 	 * @param laneList 车集合所在的lane集合
 	 * @param carIndex 车集合中各个车处于各自lane上的第几个位置
 	 * @return 需要过路口的车的集合，大小和输入的carList相同，只是将不能过路口的车的位置放置null；
-	 * @author Dalton
 	 * @version 2019.3.28
 	 */
 	protected static Car[] ThroughCar(Road road, Car[] carList, LinkedList<Lane> laneList, int[] carIndex) {
@@ -2044,12 +1948,10 @@ public class RunUtil2 {
 
 	/**
 	 * 判断该车能不能通过路口，如果一条lane上前车不能通过路口，该车也不能； 如果没有前车或者前车可以通过路口，则根据行驶速度和所在位置判断是否可以通过路口
-	 * 
 	 * @param road     当前道路
 	 * @param car      当前车辆
 	 * @param laneList 车所在的lane集合
 	 * @param carIndex 车处于各自lane上的第几个位置
-	 * @author Dalton
 	 * @version 2019.3.28
 	 */
 	protected static void canThrough(Road road, Car car, LinkedList<Lane> laneList, int[] carIndex) {
@@ -2077,7 +1979,6 @@ public class RunUtil2 {
 	 * 如果车本来有nextRoadID则不找路，直接判断它变为上述的哪种状态
 	 * 如果所选道路上的行驶速度减去在本道路上可行距离小于等于0，则不能过路口，该车变为2false，后车变为4false
 	 * @param carsID：需要排序的车ID集合（状态为1，此时要出路口的车）
-	 * @author Dalton
 	 * @version 2019.3.30
 	 */
 	public static void sortCarsOfState1(ArrayList<Car> cars) {
@@ -2097,88 +1998,14 @@ public class RunUtil2 {
 					//该路因为没更新完没空间，则变为5false，后车也是5false
 					if(hasLeftLength(toRoad, car.getCurToCrossID())==-1) {
 						setCarInRoad(toRoad, car, r, 5, false, false, false, false, false);
-//						car.setState(5);
-//						LinkedList<String> carInRoad = getCarInRoad(Main.MapRoad.get(car.getRoadID()),
-//								car.getCurFromCrossID());
-//						Iterator<String> carIter = carInRoad.iterator();
-//						while (carIter.hasNext()) {
-//							Car c = Main.MapCar.get(carIter.next());
-//							c.setState(5);
-//							Main.numOf5++;
-//						}
-						//5车不参与排序，暂时不过路口
 					}
 					//该路因为更新完没空间，则变为5true，后车往前跳，变4true,但实际设置为5，按4true来跳
 					else if(hasLeftLength(toRoad, car.getCurToCrossID())==-2) {
 						setCarInRoad(toRoad, car, r, 5, true, true, true, false, false);
-//						LinkedList<Lane> lanes;
-//						if (car.getCurFromCrossID().equals(r.getFromCrossID()))
-//							lanes = r.getForwardLane();
-//						else
-//							lanes = r.getBackwardLane();
-//						for (int j = 0; j < lanes.size(); j++) {
-//							LinkedList<Car> carsInLane = lanes.get(j).carsInLane;
-//							for (int y = 0; y < carsInLane.size(); y++) {
-//								Car shengCar = carsInLane.get(y);
-//								if (shengCar.getSheng() != 0) {
-//									if (y == 0) {
-//										shengCar.setCurPos(shengCar.getCurPos() + shengCar.getSheng());
-//									} else {
-//										int curPos = shengCar.getCurPos()
-//												- Math.min(shengCar.getCurPos() - carsInLane.get(y - 1).getCurPos() - 1,
-//														Math.abs(shengCar.getSheng()));
-//										shengCar.setCurPos(curPos);
-//									}
-//									shengCar.setSheng(0);
-//									shengCar.setState(5);
-//								} else if (shengCar.equals(car)) {
-//									car.setHasArrangedOrNot(true);
-//									car.setState(5);
-//									Main.numOf5+=2;
-//								} else if(!shengCar.isHasArrangedOrNot()){
-//									int cha = shengCar.getCurPos()
-//											- Math.min(shengCar.getMaxVelocity(), r.getMaxRoadVelocity());
-//									if (y == 0) {
-//										if (cha < 0) {
-//											shengCar.setState(5);
-//											shengCar.setHasArrangedOrNot(true);
-//											shengCar.setSheng(0);
-//										} else {
-//											shengCar.setCurPos(cha);
-//											shengCar.setState(5);
-//											shengCar.setHasArrangedOrNot(true);
-//											shengCar.setSheng(0);
-//										}
-//									} else {
-//										if (cha < 0) {
-//											shengCar.setState(5);
-//											shengCar.setHasArrangedOrNot(true);
-//											shengCar.setSheng(0);
-//										} else {
-//											shengCar.setCurPos(shengCar.getCurPos() - Math.min(
-//													Math.min(shengCar.getMaxVelocity(), r.getMaxRoadVelocity()),
-//													shengCar.getCurPos() - carsInLane.get(y - 1).getCurPos() - 1));
-//											shengCar.setState(5);
-//											shengCar.setHasArrangedOrNot(true);
-//											shengCar.setSheng(0);
-//										}
-//									}
-//								}
-//								else {
-//									shengCar.setState(5);
-//								}
-//							}
-//						}//5车不参与排序，暂时不过路口
+
 					}
 					else if(Math.min(car.getMaxVelocity(), toRoad.getMaxRoadVelocity())-car.getCurPos()<=0) {
 						setCarInRoad(toRoad, car, r, 4, false, false, false, false, false);
-//						LinkedList<String> carInCurRoad=getCarInRoad(r, car.getCurFromCrossID());
-//						Iterator<String> carInCurRoadIter = carInCurRoad.iterator();
-//						while (carInCurRoadIter.hasNext()) {
-//							Car c = Main.MapCar.get((carInCurRoadIter.next()));
-//							c.setState(4);
-//							Main.numOf2++;
-//						}
 						car.setState(2);
 					}
 					else if(Math.min(car.getMaxVelocity(), toRoad.getMaxRoadVelocity())-car.getCurPos()>0) {
@@ -2193,15 +2020,6 @@ public class RunUtil2 {
 					//找到的路因为没更新完没空间，则变为5false，后车也是5false
 					else if(hasLeftLength(toRoad, car.getCurToCrossID())==-1) {
 						setCarInRoad(toRoad, car, r, 5, false, false, false, false, false);
-//						car.setState(5);
-//						LinkedList<String> carInRoad = getCarInRoad(Main.MapRoad.get(car.getRoadID()),
-//								car.getCurFromCrossID());
-//						Iterator<String> carIter = carInRoad.iterator();
-//						while (carIter.hasNext()) {
-//							Car c = Main.MapCar.get(carIter.next());
-//							c.setState(5);
-//							Main.numOf5++;
-//						}
 						//5车不参与排序，暂时不过路口
 					}
 					//找到的路因为更新完没空间，则变为5true，后车往前跳，变4true，,但实际设置为5，按4true来跳
@@ -2211,80 +2029,9 @@ public class RunUtil2 {
 						//car.setHasArrangedOrNot(true);
 						car.setPriority(setPriority(car.getRoadID(), toRoad.getRoadID(), car.getCurToCrossID()));
 						car.setNextRoadID(toRoad.getRoadID());
-
-						
-//						LinkedList<Lane> lanes;
-//						if (car.getCurFromCrossID().equals(r.getFromCrossID()))
-//							lanes = r.getForwardLane();
-//						else
-//							lanes = r.getBackwardLane();
-//						for (int j = 0; j < lanes.size(); j++) {
-//							LinkedList<Car> carsInLane = lanes.get(j).carsInLane;
-//							for (int y = 0; y < carsInLane.size(); y++) {
-//								Car shengCar = carsInLane.get(y);
-//								if (shengCar.getSheng() != 0) {
-//									if (y == 0) {
-//										shengCar.setCurPos(shengCar.getCurPos() + shengCar.getSheng());
-//									} else {
-//										int curPos = shengCar.getCurPos()
-//												- Math.min(shengCar.getCurPos() - carsInLane.get(y - 1).getCurPos() - 1,
-//														Math.abs(shengCar.getSheng()));
-//										shengCar.setCurPos(curPos);
-//									}
-//									shengCar.setSheng(0);
-//									shengCar.setState(5);
-//								} else if (shengCar.equals(car)) {
-//									car.setState(5);
-//									car.setHasArrangedOrNot(true);
-//									car.setPriority(
-//											setPriority(car.getRoadID(), toRoad.getRoadID(), car.getCurToCrossID()));
-//									car.setNextRoadID(toRoad.getRoadID());
-//									Main.numOf5+=2;
-//								} else if(!shengCar.isHasArrangedOrNot()){
-//									int cha = shengCar.getCurPos()
-//											- Math.min(shengCar.getMaxVelocity(), r.getMaxRoadVelocity());
-//									if (y == 0) {
-//										if (cha < 0) {
-//											shengCar.setState(5);
-//											shengCar.setHasArrangedOrNot(true);
-//											shengCar.setSheng(0);
-//										} else {
-//											shengCar.setCurPos(cha);
-//											shengCar.setState(5);
-//											shengCar.setHasArrangedOrNot(true);
-//											shengCar.setSheng(0);
-//										}
-//									} else {
-//										if (cha < 0) {
-//											shengCar.setState(5);
-//											shengCar.setHasArrangedOrNot(true);
-//											shengCar.setSheng(0);
-//										} else {
-//											shengCar.setCurPos(shengCar.getCurPos() - Math.min(
-//													Math.min(shengCar.getMaxVelocity(), r.getMaxRoadVelocity()),
-//													shengCar.getCurPos() - carsInLane.get(y - 1).getCurPos() - 1));
-//											shengCar.setState(5);
-//											shengCar.setHasArrangedOrNot(true);
-//											shengCar.setSheng(0);
-//										}
-//									}
-//								}
-//								else {
-//									shengCar.setState(5);
-//								}
-//							}
-//						}
-						// 5车不参与排序，暂时不过路口
 					}
 					else if(Math.min(car.getMaxVelocity(), toRoad.getMaxRoadVelocity())-car.getCurPos()<=0) {
 						setCarInRoad(toRoad, car, r, 4, false, false, false, false, false);
-//						LinkedList<String> carInCurRoad=getCarInRoad(r, car.getCurFromCrossID());
-//						Iterator<String> carInCurRoadIter = carInCurRoad.iterator();
-//						while (carInCurRoadIter.hasNext()) {
-//							Car c = Main.MapCar.get((carInCurRoadIter.next()));
-//							c.setState(4);
-//							Main.numOf2++;
-//						}
 						car.setState(2);
 						car.setNextRoadID(toRoad.getRoadID());
 						car.setPriority(setPriority(car.getRoadID(), toRoad.getRoadID(), car.getCurToCrossID()));
@@ -2388,31 +2135,18 @@ public class RunUtil2 {
 	 * 如果它发现有路可以走了，他就变回1false了，后面车变成3false；
 	 *更新完没空间，他就变成true5,后面的车更新状态变成4true,但实际设置为5，按4true来跳后面车（如果本来能过路口则不动，本来不能过路口则向前跳）; 
 	 * 不然他还是flase5
-	 * 
 	 * @param firstCarID:状态为5false的车，排在carInRoad的头头
-	 * @author Dalton
 	 * @version 2019.3.30
 	 */
 	protected static void updateLaneForCarsAtState5(String firstCarID) {
-//		if(firstCarID.equals("10037")) {
-//		System.out.println("");
-//	}
 		Car firstCar = Main.MapCar.get(firstCarID);
 		Road curRoad = Main.MapRoad.get(firstCar.getRoadID());
-//		LinkedList<String> carInCurRoad = getCarInRoad(curRoad, firstCar.getCurFromCrossID());
+
 		Road road;
-//		if(firstCar.getNextRoadID()!="-1")
-//			road = Main.MapRoad.get(firstCar.getNextRoadID());
-//		else 
 		road = findNextCross(firstCar, Main.maxRoadLength);
 		if (hasLeftLength(road, firstCar.getCurToCrossID()) > 0) {
 			// 可供选择的路都有空间可走，该车变为1，后车变为3
 			setCarInRoad(road, firstCar, curRoad, 3, false, false, false, false, false);
-//			Iterator<String> carInCurRoadIter = carInCurRoad.iterator();
-//			while (carInCurRoadIter.hasNext()) {
-//				Car car = Main.MapCar.get((carInCurRoadIter.next()));
-//				car.setState(3);
-//			}
 			firstCar.setState(1);
 			firstCar.setNextRoadID(road.getRoadID());
 			firstCar.setPriority(setPriority(firstCar.getRoadID(), firstCar.getNextRoadID(), firstCar.getCurToCrossID()));
@@ -2420,79 +2154,11 @@ public class RunUtil2 {
 		// 更新完也没空间,则变为5true，后车往前跳，变4true,但实际设置为5，按4true来跳
 		else if (hasLeftLength(road, firstCar.getCurToCrossID()) == -2) {
 			setCarInRoad(road, firstCar, curRoad, 5, true, true, true, false, false);
-//			LinkedList<Lane> lanes;
-//			if (firstCar.getCurFromCrossID().equals(curRoad.getFromCrossID()))
-//				lanes =curRoad.getForwardLane();
-//			else
-//				lanes =curRoad.getBackwardLane();
-//			for (int j = 0; j < lanes.size(); j++) {
-//				LinkedList<Car> carsInLane = lanes.get(j).carsInLane;
-//				for (int y = 0; y < carsInLane.size(); y++) {
-//					Car shengCar = carsInLane.get(y);
-//					if (shengCar.getSheng() != 0) {
-//						if (y == 0) {
-//							shengCar.setCurPos(shengCar.getCurPos() + shengCar.getSheng());
-//						} else {
-//							int curPos = shengCar.getCurPos()
-//									- Math.min(shengCar.getCurPos() - carsInLane.get(y - 1).getCurPos() - 1,
-//											Math.abs(shengCar.getSheng()));
-//							shengCar.setCurPos(curPos);
-//						}
-//						shengCar.setSheng(0);
-//						shengCar.setState(5);
-//					} else if (shengCar.equals(firstCar)) {
-//						firstCar.setState(5);
-//						firstCar.setHasArrangedOrNot(true);
-//						firstCar.setPriority(
-//								setPriority(firstCar.getRoadID(), road.getRoadID(), firstCar.getCurToCrossID()));
-//						firstCar.setNextRoadID(road.getRoadID());
-//						Main.numOf5+=2;
-//					} else if(!shengCar.isHasArrangedOrNot()){
-//						int cha = shengCar.getCurPos()
-//								- Math.min(shengCar.getMaxVelocity(), curRoad.getMaxRoadVelocity());
-//						if (y == 0) {
-//							if (cha < 0) {
-//								shengCar.setState(5);
-//								shengCar.setHasArrangedOrNot(true);
-//								shengCar.setSheng(0);
-//							} else {
-//								shengCar.setCurPos(cha);
-//								shengCar.setState(5);
-//								shengCar.setHasArrangedOrNot(true);
-//								shengCar.setSheng(0);
-//							}
-//						} else {
-//							if (cha < 0) {
-//								shengCar.setState(5);
-//								shengCar.setHasArrangedOrNot(true);
-//								shengCar.setSheng(0);
-//							} else {
-//								shengCar.setCurPos(shengCar.getCurPos() - Math.min(
-//										Math.min(shengCar.getMaxVelocity(), curRoad.getMaxRoadVelocity()),
-//										shengCar.getCurPos() - carsInLane.get(y - 1).getCurPos() - 1));
-//								shengCar.setState(5);
-//								shengCar.setHasArrangedOrNot(true);
-//								shengCar.setSheng(0);
-//							}
-//						}
-//					}
-//					else {
-//						shengCar.setState(5);
-//					}
-//				}
-//			}
 		} else if (hasLeftLength(road, firstCar.getCurToCrossID()) == -1)
 			Main.numOf5++;
 		// 因为未更新而没有空间，该车状态不变
 	}
 	
-	/**
-	 * 
-	 * 
-	 * @param 
-	 * @author lulu
-	 * @version 2019.3.29
-	 */
 	protected static void innitial(Car c){
 			Car mapc=Main.MapCar.get(c.getCarID());
 			mapc.setCurFromCrossID(mapc.getFromCrossID());
@@ -2507,21 +2173,12 @@ public class RunUtil2 {
 			mapc.setCurPos(0);
 			mapc.setCurFromCrossID(mapc.getFromCrossID());
 			mapc.setCurToCrossID(mapc.getFromCrossID());
-			
-		//	this.carID = carID;
-		//	this.fromCrossID = fromCrossID;
-		//	this.toCrossID = toCrossID;
-		//	this.maxVelocity = maxVelocity;
-		//	this.planTime = planTime;
-			
-
 	}
 	/**
 	 * 根据一条路上,车是否出路口，lane的顺序和lane上车辆距离目的路口的距离，给出排在第一个的车ID，不考虑hasArrangeOrNot为true的车
 	 * （首先考虑是否出路口，然后考虑距离，最后考虑车道顺序）
 	 * @param road：当前道路;crossID:车从哪个路口到这个路;
 	 * @return 获得当前道路和车辆行驶方向相同的所有lane上的第一辆车。getfirst是先出发的车（头头）
-	 * @author Dalton
 	 * @version 2019.3.30
 	 */
 	public static String getFirstCarInRoad(Road road, String crossID) {
