@@ -1267,9 +1267,18 @@ public class RunUtil2 {
 						int hasJumpDis = firstCar.getCurPos();
 						firstCar.setCurPos(nextRoad.getRoadLength() - (firstCarSpeed - hasJumpDis));
 						// 2、设置状态
-						// 要找该road上在firstcar之前的车
-						Car preRoadCar = Main.MapCar.get(carInNextRoadID.get(0)); //我们取出的是整个路上的第一个car
 						
+						
+						// 要找该road上在firstcar之前的车
+						//LinkedList<String> carInNextRoadID = getCarInRoad(nextRoad, firstCar.getCurToCrossID());
+						String preRoadCarID;
+						if(getFirstCarInRoad(nextRoad, firstCar.getCurToCrossID())!=null) {
+                           preRoadCarID = getFirstCarInRoad(nextRoad, firstCar.getCurToCrossID()); //有false车
+                        }else { //只有true车
+                           preRoadCarID = getFirstTrueCarInRoad(nextRoad, firstCar.getCurToCrossID());
+                        }
+						
+						Car preRoadCar = Main.MapCar.get(preRoadCarID); //我们取出的是整个路上的第一个car						
 						//0412我们需要取得整个路上真正的头车，此时是没有我们的firstcar的，它还没加进来呢！！！（但firstcar所在的lane上木有别的car了）
 						if(carInNextRoadID.size()>1) {
 						  for(int i=1;i<carInNextRoadID.size();i++) {
@@ -2141,6 +2150,7 @@ public class RunUtil2 {
 		}
 	}
 	
+	
 	/**
 	 * 如果它发现有路可以走了，他就变回1false了，后面车变成3false；
 	 *更新完没空间，他就变成true5,后面的车更新状态变成4true,但实际设置为5，按4true来跳后面车（如果本来能过路口则不动，本来不能过路口则向前跳）; 
@@ -2235,6 +2245,61 @@ public class RunUtil2 {
 		else return null;
 	}
 
-	
+	/**
+	 * 根据一条路上,车是否出路口，lane的顺序和lane上车辆距离目的路口的距离，给出排在第一个的车ID，该路上不可能有false车
+	 * （首先考虑是否出路口，然后考虑距离，最后考虑车道顺序）
+	 * @param road 当前道路
+	 * @param crossID 车从哪个路口到这个路;
+	 * @return 获得当前道路和车辆行驶方向相同的所有lane上的第一辆车。getfirst是先出发的车（头头）
+	 * @version 2019.4.13
+	 */
+	public static String getFirstTrueCarInRoad(Road road, String crossID) {
+		LinkedList<Lane> laneList;
+		// 找到和车辆方向一致的车道集合
+		if (road.isDuplex())
+			laneList = road.getFromCrossID().equals(crossID) ? road.getForwardLane() : road.getBackwardLane();
+		else
+			laneList = road.getForwardLane();
+		int laneNum = laneList.size();
+		Car[] carList = new Car[laneNum];// 每次取排在最前面的几个车道的车进行比较,下标对应所在车道，没车的车道或遍历完车的车道放null
+		int[] carIndex = new int[laneNum];// 每个车道取到第几辆车，下标对应所在车道，没车的车道或者已经遍历完的车道放置-1
+		for (int i = 0; i < laneNum; i++) {// 初始化,放头几辆车
+			carIndex[i] = 0;
+			Lane lane = laneList.get(i);
+			if (!lane.carsInLane.isEmpty()) {// 该车道有车
+				// 跳过已安排的车辆
+				while (carIndex[i] < lane.carsInLane.size() && !lane.carsInLane.get(carIndex[i]).isHasArrangedOrNot()) {
+					carIndex[i]++;
+					System.out.println("有false车，谁在调用getFirstTrueCarInRoad");
+				}
+				// 该条车道都是未安排的车，不应该来这里
+				if (carIndex[i] == lane.carsInLane.size()) {
+					carList[i] = null;
+					carIndex[i] = -1;
+				}
+				// 
+				else
+					carList[i] = lane.carsInLane.get(carIndex[i]);
+			} else {// 该车道无车
+				carList[i] = null;
+				carIndex[i] = -1;
+			}
+		}
+		Car[] throughCar=ThroughCar(road, carList, laneList, carIndex);//选出出路口的车
+		Car out;
+		out=minCarCurPos(throughCar);
+		if(out!=null)
+			return out.getCarID();
+		else {
+			out=minCarCurPos(carList);
+		}
+		if(out!=null)
+			return out.getCarID();
+		else return null;
+		}
 
+
+	
+	
+	
 }
