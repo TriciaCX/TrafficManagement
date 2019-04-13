@@ -950,7 +950,8 @@ public class RunUtil2 {
 	 * 将State3:firstCar所处的road上的车的状态更新 需要更新状态信息，不更新位置信息
 	 * 如果firstCar能过路口，state=1,后面的车state=3;firstCar不能过路口，state=2,后面的车state=4
 	 * @param firstCar
-	 * @version 2019-3-27
+	 * @author Tricia
+	 * @version 2019-4-12
 	 */
 
 	protected static void UpdateRoadForCarsAtState3(String firstCarID) {
@@ -1099,7 +1100,8 @@ public class RunUtil2 {
 	 * 从t2时刻更新到t3时刻
 	 * @param firstCarID
 	 * @param t
-	 * @version 2019-03-27
+	 * @author Tricia
+	 * @version 2019-04-13
 	 */
 
 	public static void UpdateCarsAtState1(String firstCarID, int t) {
@@ -1286,12 +1288,16 @@ public class RunUtil2 {
 						//得到preCar之后，首先看firstCar能不能过路口
 						if (firstCar.getCurPos() < firstCarSpeed) { //firstCar能过路口
 							if(preRoadCar.getCurPos()<preRoadCarSpeed) { //preRoadCar能过路口
-								//比较两者的laneID
-								if(firstCar.getLaneID()<firstCar.getLaneID()) {//firstCar称为这条路的头车
+								//比较两者的curPos
+								if(firstCar.getCurPos()<firstCar.getCurPos()) {//firstCar称为这条路的头车
 									firstCar.setState(1);
-								}else if(firstCar.getLaneID()==firstCar.getLaneID()) {
-									System.out.println("出现我状态1就错了");
-								}else {//firstCar的laneID大于preRoadCar，preRoadCar是这条路的头车
+								}else if(firstCar.getCurPos()==firstCar.getCurPos()) { //位置相同比较laneID
+									if(firstCar.getLaneID()<firstCar.getLaneID()) { //firstCar成为头车
+										firstCar.setState(1);
+									}else { //preRoadCar是这条路的头车
+										firstCar.setState(3);
+									}
+								}else {//firstCar的curPos在preRoadCar之后，preRoadCar是这条路的头车
 									firstCar.setState(3);
 								}
 							}else {//preRoadCar不能过路口
@@ -1303,12 +1309,16 @@ public class RunUtil2 {
 								//preRoadCar是这条路的头车
 								firstCar.setState(3);
 							}else {//preRoadCar不能过路口
-								if(firstCar.getLaneID()<firstCar.getLaneID()) {
+								if(firstCar.getCurPos()<preRoadCar.getCurPos()) { //firstCar在前面
 									//firstCar成为头车
 									firstCar.setState(2);
-								}else if(firstCar.getLaneID()==firstCar.getLaneID()) {
-									System.out.println("出现我状态1就错了");
-								}else {//firstCar的laneID大于preRoadCar，preRoadCar是这条路的头车
+								}else if(firstCar.getCurPos()==preRoadCar.getCurPos()) { //位置相同，比较laneID
+									if(firstCar.getLaneID()<firstCar.getLaneID()) { //firstCar成为头车
+										firstCar.setState(2);
+									}else { //preRoadCar是这条路的头车
+										firstCar.setState(4);
+									}
+								}else {//firstCar的curPospre在RoadCar之后，preRoadCar是这条路的头车
 									firstCar.setState(4);
 								}
 							}
