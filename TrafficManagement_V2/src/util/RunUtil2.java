@@ -1101,7 +1101,7 @@ public class RunUtil2 {
 	 * @param firstCarID
 	 * @param t
 	 * @author Tricia
-	 * @version 2019-04-13
+	 * @version 2019-04-14
 	 */
 
 	public static void UpdateCarsAtState1(String firstCarID, int t) {
@@ -1242,13 +1242,17 @@ public class RunUtil2 {
 					//其实我们只需要看每个lane上的第一辆车就行
 					//0412更新，我们要更新这条路上所有车的状态，不只是没更新过的车。
 					ArrayList<String> carInNextRoadID = new ArrayList<String>();
-					LinkedList<Car> carInNextLanel = new LinkedList<Car>();
+					LinkedList<Car> carInNextLanel = new LinkedList<Car>();   
 					for(Lane l:carInNextLanes) {
 						carInNextLanel = l.carsInLane;
 						if(carInNextLanel.size()!=0) {
 						   carInNextRoadID.add(carInNextLanel.getFirst().getCarID());
 						}
-					}
+					} //不管true车还是false车，都是这条nextRoad的上的车
+					
+					
+					//	 * @param road 当前道路, @param crossID 车从哪个路口到这个路;
+					
 					
 					if (carInNextRoadID.isEmpty()) {// case2.1:该road上也没有车   原来写的是carInNextRoadID.isEmpty()，注意我们的firstcar现在还不在这条路上！！！！！
 						// 1、设置位置 curPos
@@ -1275,60 +1279,72 @@ public class RunUtil2 {
 						if(getFirstCarInRoad(nextRoad, firstCar.getCurToCrossID())!=null) {
                            preRoadCarID = getFirstCarInRoad(nextRoad, firstCar.getCurToCrossID()); //有false车
                         }else { //只有true车
-                           preRoadCarID = getFirstTrueCarInRoad(nextRoad, firstCar.getCurToCrossID());
+                           preRoadCarID = getFirstTrueCarInRoad(nextRoad, firstCar.getCurToCrossID()); //方法参数  road 当前道路, @param crossID 车从哪个路口到这个路;
                         }
 						
-						Car preRoadCar = Main.MapCar.get(preRoadCarID); //我们取出的是整个路上的第一个car						
+						Car preRoadCar = Main.MapCar.get(preRoadCarID); //我们取出的是整个路上的第一个car，可能是true也可能是false						
 						//0412我们需要取得整个路上真正的头车，此时是没有我们的firstcar的，它还没加进来呢！！！（但firstcar所在的lane上木有别的car了）
-						if(carInNextRoadID.size()>1) {
-						  for(int i=1;i<carInNextRoadID.size();i++) {
-						    //先判断这辆车能不能过路口
-							Car car1 = Main.MapCar.get(carInNextRoadID.get(i));
-							int car1Speed = Math.min(car1.getMaxVelocity(), nextRoad.getMaxRoadVelocity());
-							int preRoadCarSpeed = Math.min(preRoadCar.getMaxVelocity(), nextRoad.getMaxRoadVelocity());
-                            //能过路口，且位置在preRoadCar前面，且preRoadCar不能过路口,将car1变为preCar
-							if(car1.getCurPos()<car1Speed && car1.getCurPos()<preRoadCar.getCurPos()&&preRoadCar.getCurPos()>=preRoadCarSpeed) {
-								preRoadCar = car1;
-							}
-						  }
-						}
+//						if(carInNextRoadID.size()>1) {
+//						  for(int i=1;i<carInNextRoadID.size();i++) {
+//						    //先判断这辆车能不能过路口
+//							Car car1 = Main.MapCar.get(carInNextRoadID.get(i));
+//							int car1Speed = Math.min(car1.getMaxVelocity(), nextRoad.getMaxRoadVelocity());
+//							int preRoadCarSpeed = Math.min(preRoadCar.getMaxVelocity(), nextRoad.getMaxRoadVelocity());
+//                            //能过路口，且位置在preRoadCar前面，且preRoadCar不能过路口,将car1变为preCar
+//							if(car1.getCurPos()<car1Speed && car1.getCurPos()<preRoadCar.getCurPos()&&preRoadCar.getCurPos()>=preRoadCarSpeed) {
+//								preRoadCar = car1;
+//							}
+//						  }
+//						}
 						int preRoadCarSpeed = Math.min(preRoadCar.getMaxVelocity(), nextRoad.getMaxRoadVelocity());
 						
-						//得到preCar之后，首先看firstCar能不能过路口
-						if (firstCar.getCurPos() < firstCarSpeed) { //firstCar能过路口
-							if(preRoadCar.getCurPos()<preRoadCarSpeed) { //preRoadCar能过路口
-								//比较两者的curPos
-								if(firstCar.getCurPos()<firstCar.getCurPos()) {//firstCar称为这条路的头车
-									firstCar.setState(1);
-								}else if(firstCar.getCurPos()==firstCar.getCurPos()) { //位置相同比较laneID
-									if(firstCar.getLaneID()<firstCar.getLaneID()) { //firstCar成为头车
+						//4.14更新
+						//如果preRoadCar是false车，那它一定是头车
+						if(preRoadCar.isHasArrangedOrNot()==false) {
+                           if(preRoadCar.getState()==1) {
+                        	   firstCar.setState(3);
+                           }else if(preRoadCar.getState()==2) {
+                        	   firstCar.setState(4);
+                           }else { //3-3,4-4,5-5
+                        	   firstCar.setState(preRoadCar.getState());
+                           }
+						}else { //如果preRoadCar是true车，需要进一步判断能否过路口，curPos，laneID
+							//得到preCar之后，首先看firstCar能不能过路口
+							if (firstCar.getCurPos() < firstCarSpeed) { //firstCar能过路口
+								if(preRoadCar.getCurPos()<preRoadCarSpeed) { //preRoadCar能过路口
+									//比较两者的curPos
+									if(firstCar.getCurPos()<firstCar.getCurPos()) {//firstCar称为这条路的头车
 										firstCar.setState(1);
-									}else { //preRoadCar是这条路的头车
+									}else if(firstCar.getCurPos()==firstCar.getCurPos()) { //位置相同比较laneID
+										if(firstCar.getLaneID()<firstCar.getLaneID()) { //firstCar成为头车
+											firstCar.setState(1);
+										}else { //preRoadCar是这条路的头车
+											firstCar.setState(3);
+										}
+									}else {//firstCar的curPos在preRoadCar之后，preRoadCar是这条路的头车
 										firstCar.setState(3);
 									}
-								}else {//firstCar的curPos在preRoadCar之后，preRoadCar是这条路的头车
-									firstCar.setState(3);
+								}else {//preRoadCar不能过路口
+									//firstCar成为这条路的头车
+									firstCar.setState(1);
 								}
-							}else {//preRoadCar不能过路口
-								//firstCar称为这条路的头车
-								firstCar.setState(1);
-							}
-						}else {//firstCar不能过路口
-							if(preRoadCar.getCurPos()<preRoadCarSpeed) {//preRoadCar能过路口
-								//preRoadCar是这条路的头车
-								firstCar.setState(3);
-							}else {//preRoadCar不能过路口
-								if(firstCar.getCurPos()<preRoadCar.getCurPos()) { //firstCar在前面
-									//firstCar成为头车
-									firstCar.setState(2);
-								}else if(firstCar.getCurPos()==preRoadCar.getCurPos()) { //位置相同，比较laneID
-									if(firstCar.getLaneID()<firstCar.getLaneID()) { //firstCar成为头车
+							}else {//firstCar不能过路口
+								if(preRoadCar.getCurPos()<preRoadCarSpeed) {//preRoadCar能过路口
+									//preRoadCar是这条路的头车
+									firstCar.setState(3);
+								}else {//preRoadCar不能过路口
+									if(firstCar.getCurPos()<preRoadCar.getCurPos()) { //firstCar在前面
+										//firstCar成为头车
 										firstCar.setState(2);
-									}else { //preRoadCar是这条路的头车
+									}else if(firstCar.getCurPos()==preRoadCar.getCurPos()) { //位置相同，比较laneID
+										if(firstCar.getLaneID()<firstCar.getLaneID()) { //firstCar成为头车
+											firstCar.setState(2);
+										}else { //preRoadCar是这条路的头车
+											firstCar.setState(4);
+										}
+									}else {//firstCar的curPospre在RoadCar之后，preRoadCar是这条路的头车
 										firstCar.setState(4);
 									}
-								}else {//firstCar的curPospre在RoadCar之后，preRoadCar是这条路的头车
-									firstCar.setState(4);
 								}
 							}
 						}
