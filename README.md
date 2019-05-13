@@ -57,7 +57,7 @@
 ## 2、状态更新机制
 
 详情参见流程图
-！[状态更新总流程图](https://github.com/TriciaCX/TrafficManagement/blob/master/TrafficManagement_V2/%E6%B5%81%E7%A8%8B%E5%9B%BE.png)
+！[](https://github.com/TriciaCX/TrafficManagement/blob/master/TrafficManagement_V2/%E6%B5%81%E7%A8%8B%E5%9B%BE.png)
 
 # 四、版本说明
 
