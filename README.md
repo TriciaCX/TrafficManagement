@@ -57,7 +57,8 @@
 ## 2、状态更新机制
 
 详情参见流程图
-！[](TrafficManagement_V2/流程图.png)
+
+<img src="TrafficManagement_V2/流程图.png" width = 60% height = 60%  div align=center/>
 
 # 四、版本说明
 
