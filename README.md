@@ -58,7 +58,7 @@
 
 详情参见流程图
 
-<img src="TrafficManagement_V2/流程图.png" width = 60% height = 60%  div align=center/>
+<img src="https://github.com/TriciaCX/TrafficManagement/blob/master/TrafficManagement_V2/resources/%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1%E5%9B%BE.png" width = 80% height = 80%  div align=center/>
 
 # 四、版本说明
 
