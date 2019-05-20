@@ -173,7 +173,7 @@
     -->
     select
     <include refid="Base_Column_List" />
-    from cross
+    from road
     where roadID = #{roadID ,jdbcType=VARCHAR}
   </select>
   <select id="listRoad" resultMap="BaseResultMap">

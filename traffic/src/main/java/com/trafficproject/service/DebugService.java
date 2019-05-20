@@ -13,7 +13,7 @@ public interface DebugService {
      *
      * @version 2019-3-28
      */
-    public void testShowCarInfo(HashSet<CarModel> cs);
+    void testShowCarInfo(HashSet<CarModel> cs);
 
     /*
      * 用来输出车的状态，来debug
@@ -22,7 +22,7 @@ public interface DebugService {
      *
      * @version 2019-3-28
      */
-    public void testShowCarInfo(LinkedList<CarModel> cs);
+    void testShowCarInfo(LinkedList<CarModel> cs);
 
     /*
      * 用来输出路的状态，来debug
@@ -31,7 +31,7 @@ public interface DebugService {
      *
      * @version 2019-3-28
      */
-    public void testShowRoadInfo();
+    void testShowRoadInfo();
 
     /*
      * 用来输出路的状态，来debug
@@ -40,8 +40,8 @@ public interface DebugService {
      *
      * @version 2019-3-28
      */
-    public void testShowRoadInfo(String s);
+    void testShowRoadInfo(String s);
 
-    public void testShowMapInfo();
+    void testShowMapInfo();
 
 }

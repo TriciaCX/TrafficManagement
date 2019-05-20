@@ -15,16 +15,7 @@ public interface CrossService {
     List<CrossModel> listCross();
     Map<String,CrossModel> mapCross();
 
-    /**
-     * 对这个路口取出这时候安排的那4辆车
-     * <p>
-     * *@param carsFour最多只有四个车
-     *
-     * @return
-     * @author Lulu
-     * @version 2019-3-26
-     */
-    public LinkedList<CarModel> extractFourCar(CrossModel s);
+
 
     /**
      * 找到从路口s到路口t的道路
@@ -33,9 +24,9 @@ public interface CrossService {
      * @param crossTID
      * @return
      */
-    public RoadModel findRoad(String crossSID, String crossTID);
+    String findRoad(String crossSID, String crossTID);
 
-    public void markNextCross(String roadID, String sID);
+
 
     /**
      * @param sID:当前出发路口ID
@@ -44,7 +35,7 @@ public interface CrossService {
      * @author Dalton
      * @version 2019.3.22
      */
-    public RoadModel findFirstRoad(String sID, String tID);
+    public String findFirstRoad(String sID, String tID);
 
     /**
      * @param fromRoadID

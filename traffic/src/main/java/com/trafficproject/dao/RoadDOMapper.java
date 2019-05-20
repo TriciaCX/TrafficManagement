@@ -1,8 +1,11 @@
 package com.trafficproject.dao;
 
 import com.trafficproject.dataobject.RoadDO;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 
 public interface RoadDOMapper {
     /**

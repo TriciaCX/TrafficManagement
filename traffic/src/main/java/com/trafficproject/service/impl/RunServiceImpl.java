@@ -1,9 +1,6 @@
 package com.trafficproject.service.impl;
 
-import com.trafficproject.service.AnswerService;
-import com.trafficproject.service.CrossService;
-import com.trafficproject.service.DebugService;
-import com.trafficproject.service.ManagementService;
+import com.trafficproject.service.*;
 import com.trafficproject.service.model.CarModel;
 import com.trafficproject.service.model.CrossModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,14 +11,10 @@ import java.util.LinkedList;
 import java.util.Map;
 
 @Service
-@Component
-public class RunServiceImpl {
+public class RunServiceImpl extends BaseService implements RunService{
 
     @Autowired
     private ManagementService managementService;
-
-    @Autowired
-    private CrossService crossService;
 
     @Autowired
     private AnswerService answerService;
@@ -29,7 +22,13 @@ public class RunServiceImpl {
     @Autowired
     private DebugService debugService;
 
+    @Autowired
+    private FunctionService functionService;
+
     public void run(Map<String, String> ansMap, String[] ans) {
+        w[0] = 1;w[1] = 0;w[2] = 0;
+        managementService.getGarageFrozen().addAll(managementService.getListCar());
+        maxRoadLength=functionService.getMaxRoadLength(managementService.getListRoad());
         int t = 1;
         /**在当前时刻从车库发车*/
         managementService.carsFromGarageInsertToRoad(t);
@@ -49,6 +48,8 @@ public class RunServiceImpl {
             managementService.setNowInRoadCarState(false);
 
             t++;
+            if(t==2070)
+                System.out.println();
 
             /**判断是不是所有车都安排过了，sheng都是0了呀，也就是说位置都是真的了,其实是为了保证车库的车*/
 
@@ -59,7 +60,7 @@ public class RunServiceImpl {
 
                     /**获得四个车，存进这个链表里，可能 不是4辆车 ，但最多四辆*/
                     CrossModel s = managementService.getListCross().get(i);
-                    LinkedList<CarModel> carsFour = crossService.extractFourCar(s);
+                    LinkedList<CarModel> carsFour = functionService.extractFourCar(s);
                     if (carsFour.isEmpty()) {
                         continue;
                     }

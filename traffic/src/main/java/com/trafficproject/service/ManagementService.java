@@ -7,25 +7,23 @@ import com.trafficproject.service.model.RoadModel;
 import java.util.*;
 
 public interface ManagementService {
-    public ArrayList<CarModel> getListCar();
+    ArrayList<CrossModel> getListCross();
+    ArrayList<CarModel> getListCar();
+    ArrayList<RoadModel> getListRoad();
 
-    public ArrayList<CrossModel> getListCross();
+    void setListCross();
+    void setListRoad();
+    void setListCar();
 
-    public ArrayList<RoadModel> getListRoad();
 
-    public LinkedList<CarModel> getGarageFrozen();
 
-    public HashSet<CarModel> getNowInRoadCar();
 
-    public HashSet<String> getArrivedCar();
+    LinkedList<CarModel> getGarageFrozen();
 
-    /**
-     * 返回roadList中最长的道路
-     *
-     * @param roadList
-     * @return 最大道路长度
-     */
-    public int getMaxRoadLength(ArrayList<RoadModel> roadList);
+    HashSet<CarModel> getNowInRoadCar();
+
+    HashSet<String> getArrivedCar();
+
 
     /**
      * 对车遍历，是不是都是真实的位置了
@@ -36,7 +34,7 @@ public interface ManagementService {
      * @author Lulu
      * @version 2019-3-26
      */
-    public boolean isAllReal();
+    boolean isAllReal();
 
     /**
      * 对车遍历，是不是都是已经到达终点了
@@ -47,24 +45,24 @@ public interface ManagementService {
      * @author Lulu
      * @version 2019-3-26
      */
-    public boolean isAllArrived();
+    boolean isAllArrived();
 
 
 
     /**
      * 安排过本来就在路上走的车之后，要安排从车库来的车了，安排以后，统一把它的标志位设置成true,同时要把从车库来的车加到在路上的车里去
      */
-    public void setNowInRoadCarFromGarageWait();
+    void setNowInRoadCarFromGarageWait();
 
     /**
      * 一个时间片的末尾，将所有在路上行走的车的是否安排过都要置true或者false
      *
      * @param flag
      */
-    public void setNowInRoadCarState(Boolean flag);
+    void setNowInRoadCarState(Boolean flag);
 
 
-    public void carsFromGarageInsertToRoad(int t);
+    void carsFromGarageInsertToRoad(int t);
 
 
 
@@ -74,5 +72,5 @@ public interface ManagementService {
      * @param carsFour
      * @param t
      */
-    public void FourCarStateUnionProcess(LinkedList<CarModel> carsFour, int t);
+    void FourCarStateUnionProcess(LinkedList<CarModel> carsFour, int t);
 }

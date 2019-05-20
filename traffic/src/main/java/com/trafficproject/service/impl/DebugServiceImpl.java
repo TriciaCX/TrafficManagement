@@ -1,5 +1,6 @@
 package com.trafficproject.service.impl;
 
+import com.trafficproject.service.DebugService;
 import com.trafficproject.service.ManagementService;
 import com.trafficproject.service.RoadService;
 import com.trafficproject.service.model.CarModel;
@@ -8,14 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Service
-@Component
-public class DebugServiceImpl {
+public class DebugServiceImpl implements DebugService {
 
     @Autowired
     private ManagementService managementService;
@@ -23,7 +20,7 @@ public class DebugServiceImpl {
     @Autowired
     private RoadService roadService;
 
-    private List<RoadModel> listRoad;
+    private ArrayList<RoadModel> listRoad;
 
     private LinkedList<CarModel> garageFrozen;
 
@@ -31,15 +28,13 @@ public class DebugServiceImpl {
 
     private HashSet<CarModel> nowInRoadCar;
 
-    public DebugServiceImpl() {
-        this.listRoad = managementService.getListRoad();
-        this.garageFrozen=managementService.getGarageFrozen();
-        this.nowInRoadCar = managementService.getNowInRoadCar();
-        this.arrivedCar = managementService.getArrivedCar();
-    }
 
     /*
      * 用来输出车的状态，来debug
+     *
+     * @author lulu
+     *
+     * @version 2019-3-28
      */
     public void testShowCarInfo(HashSet<CarModel> cs) {
         Iterator<CarModel> it = cs.iterator();
@@ -53,6 +48,10 @@ public class DebugServiceImpl {
 
     /*
      * 用来输出车的状态，来debug
+     *
+     * @author lulu
+     *
+     * @version 2019-3-28
      */
     public void testShowCarInfo(LinkedList<CarModel> cs) {
         Iterator<CarModel> it = cs.iterator();
@@ -66,8 +65,15 @@ public class DebugServiceImpl {
 
     /*
      * 用来输出路的状态，来debug
+     *
+     * @author lulu
+     *
+     * @version 2019-3-28
      */
     public void testShowRoadInfo() {
+        if(managementService.getListRoad()==null)
+            managementService.setListRoad();
+        listRoad=managementService.getListRoad();
         Iterator<RoadModel> it = listRoad.iterator();
         while (it.hasNext()) {
 
@@ -79,6 +85,10 @@ public class DebugServiceImpl {
 
     /*
      * 用来输出路的状态，来debug
+     *
+     * @author lulu
+     *
+     * @version 2019-3-28
      */
     public void testShowRoadInfo(String s) {
         RoadModel r = roadService.getRoadModelById(s);
@@ -96,8 +106,13 @@ public class DebugServiceImpl {
         }
 
     }
-
+    /**
+     *
+     */
     public void testShowMapInfo() {
+        garageFrozen=managementService.getGarageFrozen();
+        nowInRoadCar=managementService.getNowInRoadCar();
+        arrivedCar=managementService.getArrivedCar();
         System.out.println("车库里还有："+garageFrozen.size()+"  在路上有："+ nowInRoadCar.size()+"  已经到家："+arrivedCar.size());
     }
 }

@@ -16,11 +16,10 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Component
 public class AnswerServiceImpl implements AnswerService {
 
     @Autowired
-   private CarService carService;
+    private CarService carService;
 
     private List<CarModel> listCar;
 
