@@ -116,12 +116,7 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
 
     /**
      * 对车遍历，是不是都是真实的位置了
-     * <p>
      * *@param hasArrag=true,sheng=o
-     *
-     * @return
-     * @author Lulu
-     * @version 2019-3-26
      */
     public boolean isAllReal() {
         if (NowInRoadCar.isEmpty()) {
@@ -147,12 +142,6 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
 
     /**
      * 对车遍历，是不是都是已经到达终点了
-     * <p>
-     * *@param
-     *
-     * @return
-     * @author Lulu
-     * @version 2019-3-26
      */
     public boolean isAllArrived() {
         if(this.listCar==null){
@@ -187,8 +176,6 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
 
     /**
      * 一个时间片的末尾，将所有在路上行走的车的是否安排过都要置true或者false
-     *
-     * @param flag
      */
     public void setNowInRoadCarState(Boolean flag) {
         Iterator<CarModel> it = NowInRoadCar.iterator();
@@ -257,9 +244,6 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
 
     /**
      * 对车辆进行所有操作
-     *
-     * @param carsFour
-     * @param t
      */
     public void FourCarStateUnionProcess(LinkedList<CarModel> carsFour, int t) {
         ArrayList<CarModel> cars1 = new ArrayList<>();
@@ -329,7 +313,8 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
 
 
     /**
-     * 将State3:firstCar所处的road上的车的状态更新 需要更新状态信息，不更新位置信息，如果firstCar能过路口，state=1,后面的车state=3;firstCar不能过路口，state=2,后面的车state=4
+     * 将State3:firstCar所处的road上的车的状态更新 需要更新状态信息，不更新位置信息，
+     * 如果firstCar能过路口，state=1,后面的车state=3;firstCar不能过路口，state=2,后面的车state=4
      *
      * @param firstCarID
      */
@@ -377,9 +362,6 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
 
     /**
      * 将firstCar所处的lane上的车从t2时刻更新到t3时刻
-     *
-     * @param car1s
-     * @param t
      */
     private void UpdateLaneForCarsAtState1(ArrayList<CarModel> car1s, int t) {
         sortCarsOfState1(car1s);
@@ -389,7 +371,6 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
 
     /**
      * 从t2时刻更新到t3时刻
-     *
      * @param firstCarID
      * @param t
      * @author Tricia
@@ -707,10 +688,7 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
 
     /**
      * 更新状态2的车所在的路
-     *
      * @param firstCarID
-     * @author Tricia
-     * @version 2019-04-15
      */
     private void UpdateRoadForCarsAtState2(String firstCarID) {
         CarModel firstCar = carService.getCarModelById(firstCarID);
@@ -725,10 +703,7 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
     /**
      * firstCar State2 nextRoadID!=-1 是去不了的1变来的 将firstCar所处的Road上的车从t2时刻更新到t3时刻
      * 更新State、curPos、sheng、hasArrangedOrNot 找出road上所有lane上的“firstCar”,更新每一个lane
-     *
      * @param firstCarID
-     * @author Tricia
-     * @version 2019-4-15
      */
     private void UpdateRoadForCarsAtState2Super(String firstCarID) {
         CarModel firstCar = carService.getCarModelById(firstCarID);
@@ -783,10 +758,7 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
     /**
      * firstCar State2 nextRoadID==-1 普通情况 将firstCar所处的Road上的车从t2时刻更新到t3时刻
      * 更新State、curPos、sheng、hasArrangedOrNot 找出road上所有lane上的“firstCar”,更新每一个lane
-     *
      * @param firstCarID
-     * @author Tricia
-     * @version 2019-4-15
      */
     private void UpdateRoadForCarsAtState2Nomal(String firstCarID) {
         // Note:将firstCar所处的Road上的车从t2时刻更新到t3时刻
@@ -855,9 +827,7 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
 
     /**
      * 将firstCar所处的lane上的车的位置从t2时刻更新到t3时刻 更新curPos、sheng
-     *
      * @param firstCarID
-     * @version 2019-04-15
      */
     private void UpdateLanePosForCarsAtState2(String firstCarID, LinkedList<LaneModel> carInLane) {
         // 更新curPos、sheng
@@ -924,12 +894,9 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
 
     /**
      * 将lanefirstCar所处的lane上的车的状态从t2时刻更新到t3时刻 需要更新的信息有：hasArrangedOrNot,State
-     *
      * @param laneFirstCarID
      * @param newFirstCarID
      * @param followingState
-     * @author Tricia
-     * @version 2019.04.15
      */
     private void UpdateLaneStateForCarsAtState2(String laneFirstCarID, String newFirstCarID, int followingState, LinkedList<LaneModel> carInLane) {
         // Note:将firstCar所处的lane上的车从t2时刻更新到t3时刻
@@ -968,12 +935,11 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
 
     /**
      * 将传入的CarID按照｛优先级，carID｝排序，先排优先级（从大到小），优先级相同的再排carID（从小到大）
-     * * 传入的车可能暂时找不到路，此时设置该车的状态为5，后车的状态也都设置为5，且该车不参与排序
-     * * 如果所找的路已经更新完也不能通行，则设置为5true，该车不动，后车（如果本来能过路口则不动，本来不能过路口则向前跳），设置为4true，但实际设置为5，按4true来跳
-     * * 要到目的地的车优先级设为3，此车参与排序
-     * * 如果车本来有nextRoadID则不找路，直接判断它变为上述的哪种状态
-     * * 如果所选道路上的行驶速度减去在本道路上可行距离小于等于0，则不能过路口，该车变为2false，后车变为4false
-     *
+     * 传入的车可能暂时找不到路，此时设置该车的状态为5，后车的状态也都设置为5，且该车不参与排序
+     * 如果所找的路已经更新完也不能通行，则设置为5true，该车不动，后车（如果本来能过路口则不动，本来不能过路口则向前跳），设置为4true，但实际设置为5，按4true来跳
+     * 要到目的地的车优先级设为3，此车参与排序
+     * 如果车本来有nextRoadID则不找路，直接判断它变为上述的哪种状态
+     * 如果所选道路上的行驶速度减去在本道路上可行距离小于等于0，则不能过路口，该车变为2false，后车变为4false
      * @param cars
      */
     private void sortCarsOfState1(ArrayList<CarModel> cars) {
@@ -1063,8 +1029,6 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
     /**
      * 更新5false车的状态，首先判断该车能不能过路口，能过则找路，不能过则该车状态变为2，后车状态变为4
      * @param firstCarID 状态为5false的车，排在carInRoad的头头
-     * @author Dalton
-     * @version 2019.4.13
      */
     private void updateCarsAtState5(String firstCarID) {
         CarModel firstCar = carService.getCarModelById(firstCarID);
@@ -1083,8 +1047,6 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
      * 更新完没空间，他就变成true5,后面的车更新状态变成4true,但实际设置为5，按4true来跳后面车（如果本来能过路口则不动，本来不能过路口则向前跳）;
      * 不然他还是flase5
      * @param firstCarID:状态为5false的车，排在carInRoad的头头
-     * @author Dalton
-     * @version 2019.4.16
      */
     private void updateLaneForCarsAtState5(String firstCarID) {
         CarModel firstCar = carService.getCarModelById(firstCarID);

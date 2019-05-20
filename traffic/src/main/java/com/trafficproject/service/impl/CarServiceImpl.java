@@ -76,11 +76,8 @@ public class CarServiceImpl implements CarService {
 
     /**
      * 找出车辆的CurPos最小的车辆
-     *
      * @param carList 车辆集合
      * @return CurPos最小的车辆
-     * @author Dalton
-     * @version 2019.3.26
      */
     public CarModel minCarCurPos(CarModel[] carList) {
         CarModel minCar = carList[0];

@@ -1,11 +1,5 @@
 package com.trafficproject.service;
-
-import com.trafficproject.service.model.CarModel;
 import com.trafficproject.service.model.CrossModel;
-import com.trafficproject.service.model.RoadModel;
-import org.springframework.stereotype.Service;
-
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +29,7 @@ public interface CrossService {
      * @author Dalton
      * @version 2019.3.22
      */
-    public String findFirstRoad(String sID, String tID);
+    String findFirstRoad(String sID, String tID);
 
     /**
      * @param fromRoadID
@@ -43,5 +37,5 @@ public interface CrossService {
      * @param crossID
      * @return 找到从路from通过路口c到路to的这个转弯的优先级
      */
-    public int setPriority(String fromRoadID, String toRoadID, String crossID);
+   int setPriority(String fromRoadID, String toRoadID, String crossID);
 }

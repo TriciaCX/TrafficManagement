@@ -105,10 +105,6 @@ public class CrossServiceImpl extends BaseService implements CrossService {
 
     /**
      * 找到从路口s到路口t的道路
-     *
-     * @param crossSID
-     * @param crossTID
-     * @return
      */
     public String findRoad(String crossSID, String crossTID) {
         if (crossSID.equals(crossTID)) {
@@ -140,8 +136,6 @@ public class CrossServiceImpl extends BaseService implements CrossService {
      * @param sID:当前出发路口ID
      * @param tID：目的路口ID
      * @return 从当前出发路口出发的第一条道路
-     * @author Dalton
-     * @version 2019.3.22
      */
     public String findFirstRoad(String sID, String tID) {
         CrossModel s = getCrossModelById(sID);

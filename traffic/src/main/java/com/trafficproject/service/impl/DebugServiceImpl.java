@@ -46,12 +46,8 @@ public class DebugServiceImpl implements DebugService {
 
     }
 
-    /*
+    /**
      * 用来输出车的状态，来debug
-     *
-     * @author lulu
-     *
-     * @version 2019-3-28
      */
     public void testShowCarInfo(LinkedList<CarModel> cs) {
         Iterator<CarModel> it = cs.iterator();
@@ -63,12 +59,8 @@ public class DebugServiceImpl implements DebugService {
 
     }
 
-    /*
+    /**
      * 用来输出路的状态，来debug
-     *
-     * @author lulu
-     *
-     * @version 2019-3-28
      */
     public void testShowRoadInfo() {
         if(managementService.getListRoad()==null)
@@ -83,12 +75,8 @@ public class DebugServiceImpl implements DebugService {
 
     }
 
-    /*
+    /**
      * 用来输出路的状态，来debug
-     *
-     * @author lulu
-     *
-     * @version 2019-3-28
      */
     public void testShowRoadInfo(String s) {
         RoadModel r = roadService.getRoadModelById(s);
@@ -106,9 +94,7 @@ public class DebugServiceImpl implements DebugService {
         }
 
     }
-    /**
-     *
-     */
+
     public void testShowMapInfo() {
         garageFrozen=managementService.getGarageFrozen();
         nowInRoadCar=managementService.getNowInRoadCar();

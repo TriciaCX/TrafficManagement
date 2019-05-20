@@ -31,9 +31,6 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
 
     /**
      * sigmoid函数
-     *
-     * @param x
-     * @return
      */
     public float sigmoid(int x) {
         return (float) (1 / (1 + Math.exp(-x)));
@@ -90,8 +87,6 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
      * @param laneList 车集合所在的lane集合
      * @param carIndex 车集合中各个车处于各自lane上的第几个位置
      * @return 需要过路口的车的集合，大小和输入的carList相同，只是将不能过路口的车的位置放置null；
-     * @author Dalton
-     * @version 2019.3.28
      */
     public CarModel[] ThroughCar(String roadID, CarModel[] carList, LinkedList<LaneModel> laneList, int[] carIndex) {
         CarModel[] c = new CarModel[carList.length];
@@ -120,8 +115,6 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
      * @param carID      当前车辆
      * @param laneList 车所在的lane集合
      * @param carIndex 车处于各自lane上的第几个位置
-     * @author Dalton
-     * @version 2019.3.28
      */
     public void canThrough(String roadID, String carID, LinkedList<LaneModel> laneList, int[] carIndex) {
         RoadModel road=roadService.getRoadModelById(roadID);
@@ -205,12 +198,7 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
 
     /**
      * 对这个路口取出这时候安排的那4辆车
-     * <p>
      * *@param carsFour最多只有四个车
-     *
-     * @return
-     * @author Lulu
-     * @version 2019-3-26
      */
     public LinkedList<CarModel> extractFourCar(CrossModel s) {
         LinkedList<CarModel> carsFour = new LinkedList<>();
@@ -265,23 +253,15 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
                 t.preCross = s;
             }
         }
-//        try {
-//            jp.proceed();
-//        }catch (Throwable e){
-//            System.out.println("AOP_adjustW wrong!");
-//        }
-        // functionServiceImpl.adjustW(Main.w);
+
     }
 
 
     /**
      * 根据一条路上,车是否出路口，lane的顺序和lane上车辆距离目的路口的距离，构建车的链表，不考虑hasArrangeOrNot为true的车
      * （首先考虑是否出路口，然后考虑距离，最后考虑车道顺序）
-     *
      * @param roadID：当前道路;crossID:车从哪个路口到这个路;
      * @return 获得当前道路和车辆行驶方向相同的所有lane上车辆的发车顺序链表。getfirst是先出发的车（头头）
-     * @author Dalton
-     * @version 2019.3.28
      */
     public LinkedList<String> getCarInRoad(String roadID, String crossID) {
         RoadModel road=roadService.getRoadModelById(roadID);
@@ -394,11 +374,8 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
     /**
      * 根据一条路上,车是否出路口，lane的顺序和lane上车辆距离目的路口的距离，给出排在第一个的车ID，不考虑hasArrangeOrNot为true的车
      * （首先考虑是否出路口，然后考虑距离，最后考虑车道顺序）
-     *
      * @param roadID：当前道路;crossID:车从哪个路口到这个路;
      * @return 获得当前道路和车辆行驶方向相同的所有lane上的第一辆车。getfirst是先出发的车（头头）
-     * @author Dalton
-     * @version 2019.3.30
      */
     public String getFirstCarInRoad(String roadID, String crossID) {
         RoadModel road=roadService.getRoadModelById(roadID);
@@ -460,12 +437,9 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
     /**
      * 根据一条路上,车是否出路口，lane的顺序和lane上车辆距离目的路口的距离，给出排在第一个的车ID，该路上不可能有false车
      * （首先考虑是否出路口，然后考虑距离，最后考虑车道顺序）
-     *
      * @param roadID    当前道路
      * @param crossID 车从哪个路口到这个路;
      * @return 获得当前道路和车辆行驶方向相同的所有lane上的第一辆车。getfirst是先出发的车（头头）
-     * @author Dalton
-     * @version 2019.4.13
      */
     public String getFirstTrueCarInRoad(String roadID, String crossID) {
         RoadModel road=roadService.getRoadModelById(roadID);
@@ -524,8 +498,6 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
      * @param setCurPos true则要更新车的位置，并动起来
      * @param setNextRoadID true则要更新车的此属性
      * @param setPriority true则要更新车的此属性
-     * @author Dalton
-     * @version 2019.04.16
      */
     public void setCarInRoad(RoadModel toRoad, CarModel car, RoadModel r, int state, boolean setHasArrangedOrNot, boolean setSheng, boolean setCurPos, boolean setNextRoadID, boolean setPriority) {
         if (car.getCarID().equals("10789") && r.getRoadID().equals("5007"))
@@ -625,7 +597,6 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
 
     /**
      * 返回roadList中最长的道路
-     *
      * @param roadList
      * @return 最大道路长度
      */
@@ -654,11 +625,8 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
     /**
      * 更新从车库出发的车的信息，判断车是否能够插入到规划的道路中，如果能，查看ID优先级是否冲突，有冲突则看
      * 是否有回退的车（存入reArrangeCars中），如果不能，直接加到存入reArrangeCars中
-     *
      * @param car：当前车；road：要走的道路；virtualCarsHashMap：存好的车的原始状态；reArrangeCars：回退车辆集合，就是可能会有ID小但是速度快的车被先从车库里面取出来，在同一时刻，起始路口相同，要选择的道路也是一条，这时候就要回退了；MapRoad：用来返回对象的
      * @return 这里返回两个元素，false:第一个插不进去，第二个：有没有回滚？没有
-     * @author lulu
-     * @version 2019-3-28
      */
     public boolean[] checkIDPriority(CarModel car, RoadModel road, LinkedList<CarModel> reArrangeCars, int t) {
         /**
@@ -726,14 +694,8 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
                     flag2 = false;
                 }
             }
-            /**
-             * 如果从上面这个循环里面出来的话，就说明要么被我掏完了，要么就是不用掏了
-             */
         }
-        /**
-         *每个lane都被我掏完了
-         */
-        // 被上一个函数调用，3.28版本你要自己判断一下可不可以进去的，儿子！
+
         // 插进去这个车，并且更新相关信息
         flag1 = carIDInsertToRoad(car, road, t);
         if (!flag1)
@@ -769,11 +731,8 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
 
     /**
      * 已经判断这辆从车库来的车想要到这个路，该怎么选择车道呢？还要更新相关信息哦，比如说准备回滚，要存一个影分身之类的，前面的道路上已经没有优先级比它差的车了
-     *
      * @param car：当前车；road：要走的道路；virtualCarsHashMap；MapRoad：用来返回对象的；
      * @return 这里返回一个元素，false:插不进去
-     * @author Lulu
-     * @version 2019-3-28
      */
     private boolean carIDInsertToRoad(CarModel car, RoadModel road, int t) {
         // LanesCarsList[0]=3,表示lane1的剩余可进入长度为3，还能进3辆车
@@ -783,12 +742,8 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
     }
 
     /**
-     * 这辆从车库出来的车能不能到这个路？调用这个函数的时候，前面是不可能出现回滚的，因为已经滚过了！能的话就插进去！
-     *
-     * @param car
-     * @param road
-     * @param t
-     * @return
+     * 这辆从车库出来的车能不能到这个路？调用这个函数的时候，
+     * 前面是不可能出现回滚的，因为已经滚过了！能的话就插进去！
      */
     private boolean InsertFreshCarToRoad(CarModel car, RoadModel road, int t) {
         ArrayList<Integer> LeftLanesLengthList = roadService.getLeftLanesLength(road.getRoadID(), car.getCurFromCrossID());
@@ -850,10 +805,6 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
             System.out.println("没有下一个路口了？奇奇怪怪的");
         }
 
-        /**
-         * 简单的信息更新
-         */
-        // 这个可以根据page10得到了
         car.setCurPos(road.getRoadLength() - Math.min(nextLaneOfRoadLeftSize, nextLaneVel));
         car.setLaneID(i);
         car.setRoadID(road.getRoadID());
@@ -917,11 +868,8 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
 
     /**
      * 被退回来的从车库出发的车看看还能不能按照原来的想法插入到这个道路中
-     *
      * @param car：被退回来的车；road：本来要走的道路；
      * @return 有没有成功插入
-     * @author Lulu
-     * @version 2019-3-26
      */
     private boolean reArrangeCarsIDInsertToRoad(CarModel car, RoadModel road, int t) {
         boolean flag = InsertFreshCarToRoad(car, road, t);
@@ -930,11 +878,6 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
 
     }
 
-    /**
-     * @param
-     * @author lulu
-     * @version 2019.3.29
-     */
     private void innitial(String cID) {
         CarModel mapc=carService.getCarModelById(cID);
         mapc.setCurFromCrossID(mapc.getFromCrossID());
@@ -953,9 +896,9 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
     }
 
     /**
-     * 对当前车辆规划下一道路,2019.3.28 保证第一条路可走（考虑rest），从car.getCurToCross开始找路径,可以进一步优化：此时第一条路不能走不一定真的在该时刻不能走，需要安排完一些车后可能会有空间
-     *
-     * @param car           当前车辆（两个等待状态）
+     * 对当前车辆规划下一道路,2019.3.28 保证第一条路可走（考虑rest），从car.getCurToCross开始找路径,可以进一步优化：
+     * 此时第一条路不能走不一定真的在该时刻不能走，需要安排完一些车后可能会有空间
+     * @param car 当前车辆（两个等待状态）
      * @return 下一条道路
      */
     public RoadModel findNextCross(CarModel car) {

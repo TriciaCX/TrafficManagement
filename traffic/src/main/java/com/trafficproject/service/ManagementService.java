@@ -27,23 +27,11 @@ public interface ManagementService {
 
     /**
      * 对车遍历，是不是都是真实的位置了
-     * <p>
-     * *@param hasArrag=true,sheng=o
-     *
-     * @return
-     * @author Lulu
-     * @version 2019-3-26
      */
     boolean isAllReal();
 
     /**
      * 对车遍历，是不是都是已经到达终点了
-     * <p>
-     * *@param
-     *
-     * @return
-     * @author Lulu
-     * @version 2019-3-26
      */
     boolean isAllArrived();
 
@@ -56,8 +44,6 @@ public interface ManagementService {
 
     /**
      * 一个时间片的末尾，将所有在路上行走的车的是否安排过都要置true或者false
-     *
-     * @param flag
      */
     void setNowInRoadCarState(Boolean flag);
 
@@ -68,9 +54,6 @@ public interface ManagementService {
 
     /**
      * 对车辆进行所有操作
-     *
-     * @param carsFour
-     * @param t
      */
     void FourCarStateUnionProcess(LinkedList<CarModel> carsFour, int t);
 }
