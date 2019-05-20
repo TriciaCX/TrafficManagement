@@ -1,3 +1,6 @@
+![](https://img.shields.io/badge/language-Java-orange.svg)
+[![](https://img.shields.io/badge/CSDN-@冰美式-red.svg)](https://me.csdn.net/weixin_43277507)
+
 说明：本项目来源于2019年华为软件挑战赛赛题，后续对其进行了改进
 
 # 一、项目简介
