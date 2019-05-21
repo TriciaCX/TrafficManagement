@@ -1,6 +1,7 @@
 package com.trafficproject.service.impl;
 
 import com.trafficproject.service.AnswerService;
+import com.trafficproject.service.BaseService;
 import com.trafficproject.service.CarService;
 import com.trafficproject.service.ManagementService;
 import com.trafficproject.service.model.CarModel;
@@ -16,22 +17,16 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class AnswerServiceImpl implements AnswerService {
-
-    @Autowired
-    private CarService carService;
-
-    private List<CarModel> listCar;
-
+public class AnswerServiceImpl extends BaseService implements AnswerService {
 
     /**
      * @param ansMap 在程序运行过程中存储的车辆当前道路的暂时信息
      * @param ans    车辆道路规划的完整信息
      */
     public void updateAns(Map<String, String> ansMap, String[] ans) {
-        if(carService.listCar()!=null){
-            listCar = carService.listCar();
-        }
+//        if(carService.listCar()!=null){
+//            listCar = carService.listCar();
+//        }
         for (CarModel c : listCar) {
             updateAns(c, ansMap, ans);
         }

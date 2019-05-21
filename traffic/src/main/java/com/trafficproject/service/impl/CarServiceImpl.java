@@ -2,6 +2,7 @@ package com.trafficproject.service.impl;
 
 import com.trafficproject.dao.CarDOMapper;
 import com.trafficproject.dataobject.CarDO;
+import com.trafficproject.service.BaseService;
 import com.trafficproject.service.CarService;
 import com.trafficproject.service.model.CarModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import java.util.stream.Collectors;
 
 
 @Service
-public class CarServiceImpl implements CarService {
+public class CarServiceImpl extends BaseService implements CarService {
 
     @Autowired
     private CarDOMapper carDOMapper;
@@ -38,7 +39,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Map<String, CarModel> mapCar() {
-        ArrayList<CarModel> listCar = (ArrayList<CarModel>) this.listCar();
+//        ArrayList<CarModel> listCar = (ArrayList<CarModel>) this.listCar();
         Map<String,CarModel> mapCar = new HashMap<>();
         for (CarModel carModel:listCar
              ) {
@@ -68,6 +69,7 @@ public class CarServiceImpl implements CarService {
         carModel.setState(-1);
         carModel.setNextRoadID("-1");
         carModel.setCanThrough(false);
+        carModel.setRoadID("-1");
         return carModel;
     }
 

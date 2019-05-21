@@ -26,9 +26,8 @@ public class RunServiceImpl extends BaseService implements RunService{
     private FunctionService functionService;
 
     public void run(Map<String, String> ansMap, String[] ans) {
-        w[0] = 1;w[1] = 0;w[2] = 0;
-        managementService.getGarageFrozen().addAll(managementService.getListCar());
-        maxRoadLength=functionService.getMaxRoadLength(managementService.getListRoad());
+        garageFrozen.addAll(listCar);
+//        maxRoadLength=functionService.getMaxRoadLength(managementService.getListRoad());
         int t = 1;
         /**在当前时刻从车库发车*/
         managementService.carsFromGarageInsertToRoad(t);
@@ -39,7 +38,7 @@ public class RunServiceImpl extends BaseService implements RunService{
         answerService.updateAns(ansMap, ans);
         System.out.println("车库始发车：");
         System.out.println("：");
-        debugService.testShowCarInfo(managementService.getNowInRoadCar());
+        debugService.testShowCarInfo(nowInRoadCar);
         debugService.testShowMapInfo();
 
 
@@ -56,10 +55,10 @@ public class RunServiceImpl extends BaseService implements RunService{
             System.out.println("At time slot " + t);
             /**先根据路口id升序，更新 路上车的状态*/
             while (!managementService.isAllReal()) {
-                for (int i = 0; i < managementService.getListCross().size(); i++) {
+                for (int i = 0; i < listCross.size(); i++) {
 
                     /**获得四个车，存进这个链表里，可能 不是4辆车 ，但最多四辆*/
-                    CrossModel s = managementService.getListCross().get(i);
+                    CrossModel s = listCross.get(i);
                     LinkedList<CarModel> carsFour = functionService.extractFourCar(s);
                     if (carsFour.isEmpty()) {
                         continue;
@@ -97,7 +96,7 @@ public class RunServiceImpl extends BaseService implements RunService{
             answerService.updateAns(ansMap, ans);
 
             System.out.println("在" + t + "时刻”+“，车库发车：");
-            debugService.testShowCarInfo(managementService.getNowInRoadCar());
+            debugService.testShowCarInfo(nowInRoadCar);
             debugService.testShowMapInfo();
 
             if (managementService.isAllArrived()) {

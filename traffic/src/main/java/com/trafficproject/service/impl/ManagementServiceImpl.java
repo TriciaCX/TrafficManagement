@@ -6,7 +6,6 @@ import com.trafficproject.service.model.CrossModel;
 import com.trafficproject.service.model.LaneModel;
 import com.trafficproject.service.model.RoadModel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -14,73 +13,51 @@ import java.util.*;
 @Service
 public class ManagementServiceImpl extends BaseService implements ManagementService {
 
-    private LinkedList<CarModel> garageFrozen = new LinkedList<>();
-    private LinkedList<CarModel> garageWait = new LinkedList<>();
-    private HashSet<String> ArrivedCar = new HashSet<>();
-    private HashSet<CarModel> NowInRoadCar = new HashSet<>();
-
-
-    @Autowired
-    private CarService carService;
-
-    @Autowired
-    private RoadService roadService;
-
-    @Autowired
-    private CrossService crossService;
-
     @Autowired
     private FunctionService functionService;
 
+//    public ArrayList<CrossModel> getListCross() {
+////        if(listCross==null)
+////            setListCross();
+////        return listCross;
+////    }
+////
+////    public void setListCross() {
+////        this.listCross = (ArrayList<CrossModel>) crossService.listCross();
+////    }
+////
+////    public ArrayList<RoadModel> getListRoad() {
+////        if(listRoad==null)
+////            setListRoad();
+////        return listRoad;
+////    }
+////
+////    public void setListRoad() {
+////        this.listRoad = (ArrayList<RoadModel>) roadService.listRoad();
+////    }
+////
+////    public ArrayList<CarModel> getListCar() {
+////        if(listCar==null)
+////            setListCar();
+////
+////        return listCar;
+////    }
 
-    private ArrayList<CarModel> listCar;
-
-    private ArrayList<CrossModel> listCross;
-
-    private ArrayList<RoadModel> listRoad;
-
-    public ArrayList<CrossModel> getListCross() {
-        if(listCross==null)
-            setListCross();
-        return listCross;
-    }
-
-    public void setListCross() {
-        this.listCross = (ArrayList<CrossModel>) crossService.listCross();
-    }
-
-    public ArrayList<RoadModel> getListRoad() {
-        if(listRoad==null)
-            setListRoad();
-        return listRoad;
-    }
-
-    public void setListRoad() {
-        this.listRoad = (ArrayList<RoadModel>) roadService.listRoad();
-    }
-
-    public ArrayList<CarModel> getListCar() {
-        if(listCar==null)
-            setListCar();
-
-        return listCar;
-    }
-
-    public void setListCar() {
-        this.listCar = (ArrayList<CarModel>) carService.listCar();
-    }
-
-    public LinkedList<CarModel> getGarageFrozen() {
-        return garageFrozen;
-    }
-
-    public HashSet<CarModel> getNowInRoadCar() {
-        return NowInRoadCar;
-    }
-
-    public HashSet<String> getArrivedCar() {
-        return ArrivedCar;
-    }
+//    public void setListCar() {
+//        this.listCar = (ArrayList<CarModel>) carService.listCar();
+//    }
+//
+//    public LinkedList<CarModel> getGarageFrozen() {
+//        return garageFrozen;
+//    }
+//
+//    public HashSet<CarModel> getNowInRoadCar() {
+//        return NowInRoadCar;
+//    }
+//
+//    public HashSet<String> getArrivedCar() {
+//        return ArrivedCar;
+//    }
 
 
 
@@ -119,12 +96,12 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
      * *@param hasArrag=true,sheng=o
      */
     public boolean isAllReal() {
-        if (NowInRoadCar.isEmpty()) {
+        if (nowInRoadCar.isEmpty()) {
 
             return true;
         }
 
-        Iterator<CarModel> carIt = NowInRoadCar.iterator();
+        Iterator<CarModel> carIt = nowInRoadCar.iterator();
         boolean ans = true;
         while (carIt.hasNext()) {
             CarModel c = carIt.next();
@@ -144,10 +121,10 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
      * 对车遍历，是不是都是已经到达终点了
      */
     public boolean isAllArrived() {
-        if(this.listCar==null){
-            setListCar();
-        }
-        Iterator<String> carIt = ArrivedCar.iterator();
+//        if(this.listCar==null){
+//            setListCar();
+//        }
+        Iterator<String> carIt = arrivedCar.iterator();
         int sum = 0;
 
         while (carIt.hasNext()) {
@@ -170,7 +147,7 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
             CarModel c = carIt.next();
             c.setHasArrangedOrNot(true);
             c.setPriority(3);
-            NowInRoadCar.add(c);
+            nowInRoadCar.add(c);
         }
     }
 
@@ -178,7 +155,7 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
      * 一个时间片的末尾，将所有在路上行走的车的是否安排过都要置true或者false
      */
     public void setNowInRoadCarState(Boolean flag) {
-        Iterator<CarModel> it = NowInRoadCar.iterator();
+        Iterator<CarModel> it = nowInRoadCar.iterator();
         while (it.hasNext()) {
             CarModel c = it.next();
             c.setHasArrangedOrNot(flag);
@@ -204,7 +181,7 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
             if (road.getRoadID().equals("5007"))
                 System.out.println();
             /**用于拥塞控制*/
-            float normalizedRoadInsertLeftLength = roadService.getNormalizedRoadLeftLength(road.getRoadID(), car.getCurFromCrossID());
+            float normalizedRoadInsertLeftLength = roadService.getNormalizedRoadLeftLength(road, car.getCurFromCrossID());
 
             if (normalizedRoadInsertLeftLength >= 0.5) {
                 //每次都要清除的
@@ -319,9 +296,9 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
      * @param firstCarID
      */
     private void UpdateRoadForCarsAtState3(String firstCarID) {
-        CarModel firstCar = carService.getCarModelById(firstCarID);
+        CarModel firstCar = mapCar.get(firstCarID);
         // car行驶的路
-        RoadModel carInRoad = roadService.getRoadModelById(firstCar.getRoadID());
+        RoadModel carInRoad = mapRoad.get(firstCar.getRoadID());
         String crossID = firstCar.getCurFromCrossID();
         // firstCar此时的行驶速度
         int maxSpeed = Math.min(firstCar.getMaxVelocity(), carInRoad.getMaxRoadVelocity());
@@ -377,8 +354,8 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
      * @version 2019-04-14
      */
     private void UpdateCarsAtState1(String firstCarID, int t) {
-        CarModel firstCar = carService.getCarModelById(firstCarID); // firstCar实例
-        RoadModel carInRoad = roadService.getRoadModelById(firstCar.getRoadID()); // firstCar所在的Road
+        CarModel firstCar = mapCar.get(firstCarID); // firstCar实例
+        RoadModel carInRoad = mapRoad.get(firstCar.getRoadID()); // firstCar所在的Road
         LinkedList<LaneModel> carInLanes = new LinkedList<LaneModel>(); // firstCar行驶的路上有哪些lane
 
         if (firstCar.getCurFromCrossID().equals(carInRoad.getFromCrossID())) {// 判断方向
@@ -395,8 +372,8 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
         //
         if (firstCar.getCurToCrossID().equals(firstCar.getToCrossID())) {
             firstCar.setRealEndTime(t + 1); // 设置到家时间
-            ArrivedCar.add(firstCarID); // 放进ArrivalCars集合
-            NowInRoadCar.remove(carService.getCarModelById(firstCarID));// 把它从路上的车集合里面删掉
+            arrivedCar.add(firstCarID); // 放进ArrivalCars集合
+            nowInRoadCar.remove(mapCar.get(firstCarID));// 把它从路上的车集合里面删掉
 
             laneInvlovesCar.carsInLane.removeFirst(); // $$$$$$将到家的Car从lane上去掉$$$$$$
 
@@ -416,7 +393,7 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
 //			}
             // 下面就是跑到别的路了
             String nextRoadID = firstCar.getNextRoadID();
-            RoadModel nextRoad = roadService.getRoadModelById(nextRoadID);
+            RoadModel nextRoad = mapRoad.get(nextRoadID);
             int firstCarSpeed = Math.min(firstCar.getMaxVelocity(), nextRoad.getMaxRoadVelocity()); // firstCar的行驶速度
 
             LinkedList<LaneModel> carInNextLanes = new LinkedList<LaneModel>(); // firstCar去往的路上有哪些lane
@@ -426,7 +403,7 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
                 carInNextLanes = nextRoad.getBackwardLane(); // firstCar将要前往的路上有哪些lane
             }
             int carInNextLanesNum = carInNextLanes.size();
-            ArrayList<Integer> lanesLeftLength = roadService.getLeftLanesLength(nextRoad.getRoadID(), firstCar.getCurToCrossID());
+            ArrayList<Integer> lanesLeftLength = roadService.getLeftLanesLength(nextRoad, firstCar.getCurToCrossID());
 
             int laneiLeftLength = 0;
             int templaneID = -1;
@@ -551,7 +528,7 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
                             preRoadCarID = functionService.getFirstTrueCarInRoad(nextRoad.getRoadID(), firstCar.getCurToCrossID()); //方法参数  road 当前道路, @param crossID 车从哪个路口到这个路;
                         }
 
-                        CarModel preRoadCar = carService.getCarModelById(preRoadCarID); //我们取出的是整个路上的第一个car，可能是true也可能是false
+                        CarModel preRoadCar = mapCar.get(preRoadCarID); //我们取出的是整个路上的第一个car，可能是true也可能是false
                         //0412我们需要取得整个路上真正的头车，此时是没有我们的firstcar的，它还没加进来呢！！！（但firstcar所在的lane上木有别的car了）
 //						if(carInNextRoadID.size()>1) {
 //						  for(int i=1;i<carInNextRoadID.size();i++) {
@@ -662,7 +639,7 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
                 firstCar.setHasArrangedOrNot(true); // 更新标志位
                 firstCar.setRoadID(nextRoadID);
                 firstCar.setCurFromCrossID(firstCar.getCurToCrossID());
-                firstCar.setCurToCrossID(roadService.getCross(nextRoad.getRoadID(), firstCar.getCurFromCrossID()));
+                firstCar.setCurToCrossID(roadService.getCross(nextRoad, firstCar.getCurFromCrossID()));
 
                 firstCar.setNextRoadID("-1");
 
@@ -691,7 +668,7 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
      * @param firstCarID
      */
     private void UpdateRoadForCarsAtState2(String firstCarID) {
-        CarModel firstCar = carService.getCarModelById(firstCarID);
+        CarModel firstCar = mapCar.get(firstCarID);
 
         if (!firstCar.getNextRoadID().equals("-1")) {
             UpdateRoadForCarsAtState2Super(firstCarID); // 其实找到路了，只是道路限速过不去
@@ -706,8 +683,8 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
      * @param firstCarID
      */
     private void UpdateRoadForCarsAtState2Super(String firstCarID) {
-        CarModel firstCar = carService.getCarModelById(firstCarID);
-        RoadModel road = roadService.getRoadModelById(firstCar.getRoadID());
+        CarModel firstCar = mapCar.get(firstCarID);
+        RoadModel road = mapRoad.get(firstCar.getRoadID());
         LinkedList<LaneModel> carInLane = new LinkedList<LaneModel>();
         if (firstCar.getCurFromCrossID().equals(road.getFromCrossID())) {
             carInLane = road.getForwardLane();
@@ -735,7 +712,7 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
             //如果没有false车，那就都是true车了？
             newFirstCarID = functionService.getFirstTrueCarInRoad(road.getRoadID(), firstCar.getCurFromCrossID());
         }
-        CarModel newFirstCar = carService.getCarModelById(newFirstCarID);
+        CarModel newFirstCar = mapCar.get(newFirstCarID);
 
         newFirstCar.setState(1); // firstCar是由1车变过来的，curpos都变成0了，状态一定是1
 
@@ -765,8 +742,8 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
         // 找出road上所有lane上的“firstCar”,更新每一个lane
         // firstCar的t3时刻一定是不能过路口的；
         // 但t4时刻的状态是不一定的，如果能够过路口设为1，后面的车都是3；不能过路口的话，设为2，后面都是4
-        CarModel firstCar = carService.getCarModelById(firstCarID);
-        RoadModel road = roadService.getRoadModelById(firstCar.getRoadID());
+        CarModel firstCar = mapCar.get(firstCarID);
+        RoadModel road = mapRoad.get(firstCar.getRoadID());
         LinkedList<LaneModel> carInLane = new LinkedList<LaneModel>();
         if (firstCar.getCurFromCrossID().equals(road.getFromCrossID())) {
             carInLane = road.getForwardLane();
@@ -793,7 +770,7 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
             //如果没有false车，那就都是true车了？
             newFirstCarID = functionService.getFirstTrueCarInRoad(road.getRoadID(), firstCar.getCurFromCrossID());
         }
-        CarModel newFirstCar = carService.getCarModelById(newFirstCarID);
+        CarModel newFirstCar = mapCar.get(newFirstCarID);
 
         int newmaxSpeed = Math.min(newFirstCar.getMaxVelocity(), road.getMaxRoadVelocity()); // firstCar此时的行驶速度
 
@@ -837,8 +814,8 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
         // 但t4时刻的状态是不一定的，如果能够过路口设为1，后面的车都是3；不能过路口的话，设为2，后面都是4
 
         // *************找出firstCar所在的lane
-        CarModel firstCar = carService.getCarModelById(firstCarID);
-        RoadModel carInRoad = roadService.getRoadModelById(firstCar.getRoadID()); // car行驶的路
+        CarModel firstCar = mapCar.get(firstCarID);
+        RoadModel carInRoad = mapRoad.get(firstCar.getRoadID()); // car行驶的路
 
         int carInLaneID = firstCar.getLaneID();
         LaneModel laneInvlovesCar = carInLane.get(carInLaneID);// fisrtCar所在的lane
@@ -903,7 +880,7 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
         // firstCar的curPos已经更新到t3时刻！（该路上所有车的curpos都已经更新到t3时刻了）
 
         // *************找出firstCar所在的lane
-        CarModel firstCar = carService.getCarModelById(laneFirstCarID);
+        CarModel firstCar = mapCar.get(laneFirstCarID);
         //Road carInRoad = Main.MapRoad.get(firstCar.getRoadID()); // car行驶的路
         //		LinkedList<Lane> carInLane = new LinkedList<Lane>();
         //		if (firstCar.getCurFromCrossID().equals(carInRoad.getFromCrossID())) {
@@ -947,7 +924,7 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
         if (cars != null && cars.size() != 0) {
             for (int i = 0; i < cars.size(); i++) {
                 CarModel car = cars.get(i);
-                RoadModel r = roadService.getRoadModelById((car.getRoadID()));
+                RoadModel r = mapRoad.get((car.getRoadID()));
                 if (car.getCurToCrossID().equals(car.getToCrossID())) {
                     //要到家的车
                     car.setPriority(3);
@@ -955,13 +932,13 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
                     carsList.add(car);
                 } else if (!car.getNextRoadID().equals("-1")) {
                     //过路口但不许要重新找路
-                    RoadModel toRoad = roadService.getRoadModelById(car.getNextRoadID());
+                    RoadModel toRoad = mapRoad.get(car.getNextRoadID());
                     //该路因为没更新完没空间，则变为5false，后车也是5false
-                    if (roadService.hasLeftLength(toRoad.getRoadID(), car.getCurToCrossID()) == -1) {
+                    if (roadService.hasLeftLength(toRoad, car.getCurToCrossID()) == -1) {
                         functionService.setCarInRoad(toRoad, car, r, 5, false, false, false, false, false);
                     }
                     //该路因为更新完没空间，则变为5true，后车往前跳，变4true,但实际设置为5，按4true来跳
-                    else if (roadService.hasLeftLength(toRoad.getRoadID(), car.getCurToCrossID()) == -2) {
+                    else if (roadService.hasLeftLength(toRoad, car.getCurToCrossID()) == -2) {
                         functionService.setCarInRoad(toRoad, car, r, 5, true, true, true, false, false);
                     } else if (Math.min(car.getMaxVelocity(), toRoad.getMaxRoadVelocity()) - car.getCurPos() <= 0) {
                         functionService.setCarInRoad(toRoad, car, r, 4, false, false, false, false, false);
@@ -976,11 +953,11 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
                         System.out.println("我死在这里了");
                     }
                     //找到的路因为没更新完没空间，则变为5false，后车也是5false
-                    else if (roadService.hasLeftLength(toRoad.getRoadID(), car.getCurToCrossID()) == -1) {
+                    else if (roadService.hasLeftLength(toRoad, car.getCurToCrossID()) == -1) {
                         functionService.setCarInRoad(toRoad, car, r, 5, false, false, false, false, false);
                     }
                     //找到的路因为更新完没空间，则变为5true，后车往前跳，变4true，,但实际设置为5，按4true来跳
-                    else if (roadService.hasLeftLength(toRoad.getRoadID(), car.getCurToCrossID()) == -2) {
+                    else if (roadService.hasLeftLength(toRoad, car.getCurToCrossID()) == -2) {
                         functionService.setCarInRoad(toRoad, car, r, 5, true, true, true, false, false);
                         car.setPriority(crossService.setPriority(car.getRoadID(), toRoad.getRoadID(), car.getCurToCrossID()));
                         car.setNextRoadID(toRoad.getRoadID());
@@ -1031,8 +1008,8 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
      * @param firstCarID 状态为5false的车，排在carInRoad的头头
      */
     private void updateCarsAtState5(String firstCarID) {
-        CarModel firstCar = carService.getCarModelById(firstCarID);
-        RoadModel curRoad = roadService.getRoadModelById(firstCar.getRoadID());
+        CarModel firstCar = mapCar.get(firstCarID);
+        RoadModel curRoad = mapRoad.get(firstCar.getRoadID());
         if (firstCar.getCurPos() < Math.min(firstCar.getMaxVelocity(), curRoad.getMaxRoadVelocity())) {
             updateLaneForCarsAtState5(firstCarID);
         } else {
@@ -1049,8 +1026,8 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
      * @param firstCarID:状态为5false的车，排在carInRoad的头头
      */
     private void updateLaneForCarsAtState5(String firstCarID) {
-        CarModel firstCar = carService.getCarModelById(firstCarID);
-        RoadModel curRoad = roadService.getRoadModelById(firstCar.getRoadID());
+        CarModel firstCar = mapCar.get(firstCarID);
+        RoadModel curRoad = mapRoad.get(firstCar.getRoadID());
         RoadModel road;
         /**
          * 首先判断是不是到家车，如果是直接变成1false, 不是就按照正常逻辑
@@ -1061,7 +1038,7 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
             return;
         }
         road = functionService.findNextCross(firstCar);
-        if (roadService.hasLeftLength(road.getRoadID(), firstCar.getCurToCrossID()) > 0) {
+        if (roadService.hasLeftLength(road, firstCar.getCurToCrossID()) > 0) {
             // 可供选择的路都有空间可走，该车变为1，后车变为3
             functionService.setCarInRoad(road, firstCar, curRoad, 3, false, false, false, false, false);
             firstCar.setState(1);
@@ -1069,9 +1046,9 @@ public class ManagementServiceImpl extends BaseService implements ManagementServ
             firstCar.setPriority(crossService.setPriority(firstCar.getRoadID(), firstCar.getNextRoadID(), firstCar.getCurToCrossID()));
         }
         // 更新完也没空间,则变为5true，后车往前跳，变4true,但实际设置为5，按4true来跳
-        else if (roadService.hasLeftLength(road.getRoadID(), firstCar.getCurToCrossID()) == -2) {
+        else if (roadService.hasLeftLength(road, firstCar.getCurToCrossID()) == -2) {
             functionService.setCarInRoad(road, firstCar, curRoad, 5, true, true, true, false, false);
-        } else if (roadService.hasLeftLength(road.getRoadID(), firstCar.getCurToCrossID()) == -1) {
+        } else if (roadService.hasLeftLength(road, firstCar.getCurToCrossID()) == -1) {
             numOf5++;
         }
         // 因为未更新而没有空间，该车状态不变

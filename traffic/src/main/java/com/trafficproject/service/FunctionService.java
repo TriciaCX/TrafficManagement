@@ -14,11 +14,11 @@ public interface FunctionService {
      * @param x
      * @return
      */
-    float sigmoid(int x);
-
-    float swish(int x);
-
-    void adjustW();
+//    float sigmoid(int x);
+//
+//    float swish(int x);
+//
+//    void adjustW();
 
     /**
      * 查询当前搜索的道路和车的方向是否冲突
@@ -104,12 +104,12 @@ public interface FunctionService {
     void setCarInRoad(RoadModel toRoad, CarModel car, RoadModel r, int state, boolean setHasArrangedOrNot, boolean setSheng, boolean setCurPos, boolean setNextRoadID, boolean setPriority);
 
 
-    /**
-     * 返回roadList中最长的道路
-     * @param roadList
-     * @return 最大道路长度
-     */
-    int getMaxRoadLength(ArrayList<RoadModel> roadList);
+//    /**
+//     * 返回roadList中最长的道路
+//     * @param roadList
+//     * @return 最大道路长度
+//     */
+//    int getMaxRoadLength(ArrayList<RoadModel> roadList);
 
     /**
      * 更新从车库出发的车的信息，判断车是否能够插入到规划的道路中，如果能，查看ID优先级是否冲突，有冲突则看

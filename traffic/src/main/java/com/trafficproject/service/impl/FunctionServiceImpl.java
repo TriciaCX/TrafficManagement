@@ -7,6 +7,7 @@ import com.trafficproject.service.model.LaneModel;
 import com.trafficproject.service.model.RoadModel;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,46 +17,21 @@ import java.util.*;
 
 
 @Service
-@Aspect
 public class FunctionServiceImpl extends BaseService implements FunctionService {
 
-    @Autowired
-    private RoadService roadService;
-    @Autowired
-    private CarService carService;
-    @Autowired
-    private CrossService crossService;
+//    @Autowired
+//    private RoadService roadService;
+//    @Autowired
+//    private CarService carService;
+//    @Autowired
+//    private CrossService crossService;
+//
+//    private ArrayList<CrossModel> listCross;
 
-    private ArrayList<CrossModel> listCross;
 
 
-    /**
-     * sigmoid函数
-     */
-    public float sigmoid(int x) {
-        return (float) (1 / (1 + Math.exp(-x)));
-    }
 
-    public float swish(int x) {
-        return x * sigmoid(x);
-    }
 
-    @Pointcut("execution(* com.trafficproject.service.impl.FunctionServiceImpl.findNextCross())")
-    public void find(){}
-
-    @After("find()")
-    public void adjustW() {
-        if (numOf2 != 0) {
-            w[1] = sigmoid(numOf5 / numOf2);
-        } else {
-
-            w[1] = sigmoid(numOf5 / (numOf2 + 1));
-        }
-        w[2] = (float) ((float) w[1] * 0.5);
-        w[0] = 1 - w[1] - w[2];
-        w[1] *= 1;
-        System.out.println("AOP works");
-    }
 
     /**
      * 查询当前搜索的道路和车的方向是否冲突
@@ -65,7 +41,7 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
      * @return true：方向一致；false：方向相反
      */
     public boolean isDirectionRight(String roadID, String crossID) {
-        RoadModel road=roadService.getRoadModelById(roadID);
+        RoadModel road=mapRoad.get(roadID);
         if (!road.isDuplex()) {
             if (road.getFromCrossID().equals(crossID)) {
 
@@ -117,8 +93,8 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
      * @param carIndex 车处于各自lane上的第几个位置
      */
     public void canThrough(String roadID, String carID, LinkedList<LaneModel> laneList, int[] carIndex) {
-        RoadModel road=roadService.getRoadModelById(roadID);
-        CarModel car= carService.getCarModelById(carID);
+        RoadModel road=mapRoad.get(roadID);
+        CarModel car= mapCar.get(carID);
         int laneID = car.getLaneID();
         int carIn = carIndex[laneID];
         LinkedList<CarModel> carsInLane = laneList.get(laneID).carsInLane;
@@ -147,11 +123,11 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
         int carInCrossNum =0;
         int carInCrossSumNum =0;
         int carInReverseLaneNum =0;
-        String[] roadIDList = crossService.getCrossModelById(carToCrossID).getRoadIDList();
+        String[] roadIDList = mapCross.get(carToCrossID).getRoadIDList();
         ArrayList<RoadModel> roadList = new ArrayList<RoadModel>();
         for(String s:roadIDList) {
             if (!s.equals("-1")) {
-                roadList.add(roadService.getRoadModelById(s));
+                roadList.add(mapRoad.get(s));
             }
         }
         for(RoadModel road:roadList) {
@@ -205,28 +181,28 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
         if (!s.getDownRoad().getRoadID().equals("-1")) {
             String carID = getFirstCarInRoad(s.getDownRoad().getRoadID(), s.getCrossID());
             if (carID != null) {
-                carsFour.add(carService.getCarModelById(carID));
+                carsFour.add(mapCar.get(carID));
             }
         }
         if (!s.getUpRoad().getRoadID().equals("-1")) {
             String carID = getFirstCarInRoad(s.getUpRoad().getRoadID(), s.getCrossID());
             if (carID != null) {
 
-                carsFour.add(carService.getCarModelById(carID));
+                carsFour.add(mapCar.get(carID));
             }
         }
         if (!s.getLeftRoad().getRoadID().equals("-1")) {
             String carID = getFirstCarInRoad(s.getLeftRoad().getRoadID(), s.getCrossID());
             if (carID != null) {
 
-                carsFour.add(carService.getCarModelById(carID));
+                carsFour.add(mapCar.get(carID));
             }
         }
         if (!s.getRightRoad().getRoadID().equals("-1")) {
             String carID = getFirstCarInRoad(s.getRightRoad().getRoadID(), s.getCrossID());
             if (carID != null) {
 
-                carsFour.add(carService.getCarModelById(carID));
+                carsFour.add(mapCar.get(carID));
             }
         }
 
@@ -234,17 +210,18 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
     }
 
     public void markNextCross(String roadID, String sID) {
-        if(maxRoadLength==0){
-            maxRoadLength=getMaxRoadLength((ArrayList<RoadModel>) roadService.listRoad());
-        }
-        CrossModel s=crossService.getCrossModelById(sID);
-        CrossModel t = crossService.getCrossModelById(roadService.getCross(roadID, sID));
+//        if(maxRoadLength==0){
+//            maxRoadLength=getMaxRoadLength((ArrayList<RoadModel>) roadService.listRoad());
+//        }
+        RoadModel road=roadService.getRoadModelById(roadID);
+        CrossModel s=mapCross.get(sID);
+        CrossModel t = mapCross.get(roadService.getCross(road, sID));
         if (!t.isKnown) {
             // 自适应调整w2（和遇到前方）和w3（和回滚相关）
             // cost1:要去的那条路和最长的那条路的比值
-            float NormalizedRoadLength = roadService.getNormalizedRoadLength(roadID, maxRoadLength);
+            float NormalizedRoadLength = roadService.getNormalizedRoadLength(road, maxRoadLength);
             // cost2：要去的那条路的剩余空间
-            float NormalizedRoadLeftLength = roadService.getNormalizedRoadLeftLength(roadID, s.getCrossID());
+            float NormalizedRoadLeftLength = roadService.getNormalizedRoadLeftLength(road, s.getCrossID());
             // cost3：拥挤系数，其中CrossInfo.getCrossCarNum(s.getCrossID(), t.getCrossID())表示有多少辆车会通过这个路口
             float sigmoidCrossCarNum = swish(getCrossCarNum(t.getCrossID()));
             float cost = w[0] * NormalizedRoadLength + w[1] * (1 - NormalizedRoadLeftLength) + w[2] * sigmoidCrossCarNum;
@@ -264,7 +241,7 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
      * @return 获得当前道路和车辆行驶方向相同的所有lane上车辆的发车顺序链表。getfirst是先出发的车（头头）
      */
     public LinkedList<String> getCarInRoad(String roadID, String crossID) {
-        RoadModel road=roadService.getRoadModelById(roadID);
+        RoadModel road=mapRoad.get(roadID);
         LinkedList<LaneModel> laneList;
         LinkedList<String> out = new LinkedList<>();
         // 找到和车辆方向一致的车道集合
@@ -378,7 +355,7 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
      * @return 获得当前道路和车辆行驶方向相同的所有lane上的第一辆车。getfirst是先出发的车（头头）
      */
     public String getFirstCarInRoad(String roadID, String crossID) {
-        RoadModel road=roadService.getRoadModelById(roadID);
+        RoadModel road=mapRoad.get(roadID);
         LinkedList<LaneModel> laneList;
         // 找到和车辆方向一致的车道集合
         if (road.isDuplex()) {
@@ -442,7 +419,7 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
      * @return 获得当前道路和车辆行驶方向相同的所有lane上的第一辆车。getfirst是先出发的车（头头）
      */
     public String getFirstTrueCarInRoad(String roadID, String crossID) {
-        RoadModel road=roadService.getRoadModelById(roadID);
+        RoadModel road=mapRoad.get(roadID);
         LinkedList<LaneModel> laneList;
         // 找到和车辆方向一致的车道集合
         if (road.isDuplex())
@@ -595,32 +572,32 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
         }
     }
 
-    /**
-     * 返回roadList中最长的道路
-     * @param roadList
-     * @return 最大道路长度
-     */
-    public int getMaxRoadLength(ArrayList<RoadModel> roadList) {
-        RoadComparator myComparator = new RoadComparator();
-        return (Collections.max(roadList, myComparator).getRoadLength());
-    }
-
-    private static class RoadComparator implements Comparator<RoadModel> {
-        @Override
-        public int compare(RoadModel r1, RoadModel r2) {
-            //根据路的长度对路排序
-            if (r1.getRoadLength() > r2.getRoadLength()) {
-
-                return 1;
-            } else if (r1.getRoadLength() < r2.getRoadLength()) {
-                return -1;
-
-            } else {
-
-            }
-            return 0;
-        }
-    }
+//    /**
+//     * 返回roadList中最长的道路
+//     * @param roadList
+//     * @return 最大道路长度
+//     */
+//    public int getMaxRoadLength(ArrayList<RoadModel> roadList) {
+//        RoadComparator myComparator = new RoadComparator();
+//        return (Collections.max(roadList, myComparator).getRoadLength());
+//    }
+//
+//    private static class RoadComparator implements Comparator<RoadModel> {
+//        @Override
+//        public int compare(RoadModel r1, RoadModel r2) {
+//            //根据路的长度对路排序
+//            if (r1.getRoadLength() > r2.getRoadLength()) {
+//
+//                return 1;
+//            } else if (r1.getRoadLength() < r2.getRoadLength()) {
+//                return -1;
+//
+//            } else {
+//
+//            }
+//            return 0;
+//        }
+//    }
 
     /**
      * 更新从车库出发的车的信息，判断车是否能够插入到规划的道路中，如果能，查看ID优先级是否冲突，有冲突则看
@@ -678,7 +655,7 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
                     // 那这个车要回退的
                     // 先把这些要退回的车辆的信息更新一下
                     // 提取这辆车
-                    CarModel virtualCar = carService.getCarModelById(cars.getLast().getCarID());
+                    CarModel virtualCar = mapCar.get(cars.getLast().getCarID());
                     /**
                      * 4.13.新发现，如果直接删掉它可能会导致这条路上车辆的状态都是4，这可不行
                      */
@@ -702,7 +679,7 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
         // 如果这个车插不进去的,也放到重新安排的车的集合里,外面会再安排一次,再不行就放到garageFrozon里
         // 因为是false,所以没有在实际网络添加过它，所以只要返回原来的就好了
         {
-            CarModel carVir = carService.getCarModelById(car.getCarID());
+            CarModel carVir = mapCar.get(car.getCarID());
             innitial(carVir.getCarID());
             reArrangeCars.add(car);
         }
@@ -746,7 +723,7 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
      * 前面是不可能出现回滚的，因为已经滚过了！能的话就插进去！
      */
     private boolean InsertFreshCarToRoad(CarModel car, RoadModel road, int t) {
-        ArrayList<Integer> LeftLanesLengthList = roadService.getLeftLanesLength(road.getRoadID(), car.getCurFromCrossID());
+        ArrayList<Integer> LeftLanesLengthList = roadService.getLeftLanesLength(road, car.getCurFromCrossID());
         int size = road.getLanesNum();
         int i = 0;
         // true:可以插入；false:插不进去
@@ -832,7 +809,7 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
         // preCar是这个路上的之字划开的前面的第一辆车，可能是刚插进去的那辆车，可能不是
         // 这里不用判断是不是为空，因为我刚插进去一辆车呢，而且car.setHasArrangedOrNot是false，是会被读到的
 
-        CarModel preCar = carService.getCarModelById(getFirstCarInRoad(road.getRoadID(), car.getFromCrossID()));
+        CarModel preCar = mapCar.get(getFirstCarInRoad(road.getRoadID(), car.getFromCrossID()));
 
 
         if (preCar.equals(car)) {
@@ -879,7 +856,7 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
     }
 
     private void innitial(String cID) {
-        CarModel mapc=carService.getCarModelById(cID);
+        CarModel mapc=mapCar.get(cID);
         mapc.setCurFromCrossID(mapc.getFromCrossID());
         mapc.setLaneID(-1);
         mapc.setRoadID("-1");
@@ -902,20 +879,20 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
      * @return 下一条道路
      */
     public RoadModel findNextCross(CarModel car) {
-        if(this.listCross==null){
-            this.listCross= (ArrayList<CrossModel>) crossService.listCross();
+        if(listCross==null){
+            listCross= (ArrayList<CrossModel>) crossService.listCross();
         }
         // 车所在路的通向路口是终点，则返回这条路ID
         if (car.getCurToCrossID().equals(car.getToCrossID())) {
-            return roadService.getRoadModelById(car.getRoadID());
+            return mapRoad.get(car.getRoadID());
         }
         // 未知节点集合
         List<CrossModel> unknown = new ArrayList<CrossModel>();
         // 当前出发节点路口，可能为null
-        CrossModel s = crossService.getCrossModelById(car.getCurToCrossID());
+        CrossModel s = mapCross.get(car.getCurToCrossID());
         // 目的地
-        CrossModel t = crossService.getCrossModelById(car.getToCrossID());
-        Iterator<CrossModel> crossIter = this.listCross.iterator();
+        CrossModel t = mapCross.get(car.getToCrossID());
+        Iterator<CrossModel> crossIter = listCross.iterator();
         while (crossIter.hasNext()) {
             CrossModel cross = crossIter.next();
             if (s.getCrossID().equals(cross.getCrossID())) {
@@ -936,11 +913,11 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
         for (String roadID : s.getRoadIDList()) {
             if (!roadID.equals("-1")) {
 
-                roads.add(roadService.getRoadModelById(roadID));
+                roads.add(mapRoad.get(roadID));
             }
         }
         // 找到车过来的路,初始情况返回null
-        RoadModel preRoad = roadService.getRoadModelById(crossService.findRoad(car.getCurFromCrossID(), car.getCurToCrossID()));
+        RoadModel preRoad = mapRoad.get(crossService.findRoad(car.getCurFromCrossID(), car.getCurToCrossID()));
         // 不标记第一条可选路中不能走的路
         boolean flag = deleteCrossFromUnknown(car, roads, preRoad);
         if (!flag) {
@@ -971,7 +948,7 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
             unknown.remove(unknown.size() - 1);
             ArrayList<RoadModel> roadsList = new ArrayList<>();
             for (String roadID : v.getRoadIDList()) {
-                RoadModel road = roadService.getRoadModelById(roadID);
+                RoadModel road = mapRoad.get(roadID);
                 if (!roadID.equals("-1")) {
 
                     roadsList.add(road);
@@ -984,7 +961,7 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
                 }
             }
         }
-        return roadService.getRoadModelById(crossService.findFirstRoad(s.getCrossID(), t.getCrossID()));
+        return mapRoad.get(crossService.findFirstRoad(s.getCrossID(), t.getCrossID()));
     }
 
     /**
@@ -998,10 +975,10 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
         int numOfAbleRoads = 0;
         CrossModel s;
         if (car.getCurToCrossID() == null) {
-            s = crossService.getCrossModelById(car.getFromCrossID());
+            s = mapCross.get(car.getFromCrossID());
         } else {
             // 车辆出发节点
-            s = crossService.getCrossModelById(car.getCurToCrossID());
+            s = mapCross.get(car.getCurToCrossID());
         }
         int[] flag = new int[roads.size()];
         for (int i = 0; i < roads.size(); i++) {
@@ -1018,15 +995,15 @@ public class FunctionServiceImpl extends BaseService implements FunctionService 
                 } else if (!isDirectionRight(road.getRoadID(), s.getCrossID())) {
                     // 有路但方向不对标记为-3
                     flag[i] = -3;
-                } else if (roadService.hasLeftLength(road.getRoadID(), s.getCrossID()) > 0) {
+                } else if (roadService.hasLeftLength(road, s.getCrossID()) > 0) {
                     numOfAbleRoads++;
                     // 有空间
                     flag[i] = 1;
-                } else if (roadService.hasLeftLength(road.getRoadID(), s.getCrossID()) == -1) {
+                } else if (roadService.hasLeftLength(road, s.getCrossID()) == -1) {
                     numOfAbleRoads++;
                     // 没更新过而没空间
                     flag[i] = 2;
-                } else if (roadService.hasLeftLength(road.getRoadID(), s.getCrossID()) == -2) {
+                } else if (roadService.hasLeftLength(road, s.getCrossID()) == -2) {
                     numOfAbleRoads++;
                     // 更新过而没空间
                     flag[i] = 3;

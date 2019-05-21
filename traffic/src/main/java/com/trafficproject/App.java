@@ -10,6 +10,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,43 +26,43 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class App 
 {
-    @Autowired
-    private CarDOMapper carDOMapper;
-
-    @Autowired
-    private CarService carService;
-
-    @Autowired
-    private FunctionService functionService;
-
-    @Autowired
-    private ManagementService managementService;
-
-
-//    @RequestMapping("/")
-
-    public void home(){
-        //CarDO carDO = carDOMapper.selectByPrimaryKey(1);
-        CarDO carDO = carDOMapper.selectByCarId("10000");
+//    @Autowired
+//    private CarDOMapper carDOMapper;
+//
+////    @Autowired
+////    private CarService carService;
+////
+////    @Autowired
+////    private FunctionService functionService;
+//
+//    @Autowired
+//    private ManagementService managementService;
+//
+//
+////    @RequestMapping("/")
+//
+//    public void home(){
+//        //CarDO carDO = carDOMapper.selectByPrimaryKey(1);
+//        CarDO carDO = carDOMapper.selectByCarId("10000");
+////        if(carDO ==null){
+////            return "用户对象不存在";
+////        }else{
+////            return carDO.getMaxvelocity().toString();
+////        }
 //        if(carDO ==null){
-//            return "用户对象不存在";
+//            System.out.println("用户对象不存在");
 //        }else{
-//            return carDO.getMaxvelocity().toString();
+//            System.out.println(carDO.getMaxvelocity().toString());
 //        }
-        if(carDO ==null){
-            System.out.println("用户对象不存在");
-        }else{
-            System.out.println(carDO.getMaxvelocity().toString());
-        }
-
-    }
-    public void a(){
-        this.managementService=new ManagementServiceImpl();
-        if(!managementService.isAllArrived())
-            System.out.println("1");
-        else
-            System.out.println("0");
-    }
+//
+//    }
+//    public void a(){
+//        this.managementService=new ManagementServiceImpl();
+//        if(!managementService.isAllArrived())
+//            System.out.println("1");
+//        else
+//            System.out.println("0");
+//    }
 
     public static void main( String[] args )
     {

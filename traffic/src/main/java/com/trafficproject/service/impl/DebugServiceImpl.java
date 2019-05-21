@@ -1,5 +1,6 @@
 package com.trafficproject.service.impl;
 
+import com.trafficproject.service.BaseService;
 import com.trafficproject.service.DebugService;
 import com.trafficproject.service.ManagementService;
 import com.trafficproject.service.RoadService;
@@ -12,21 +13,21 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
-public class DebugServiceImpl implements DebugService {
+public class DebugServiceImpl extends BaseService implements DebugService {
 
-    @Autowired
-    private ManagementService managementService;
+//    @Autowired
+//    private ManagementService managementService;
 
-    @Autowired
-    private RoadService roadService;
-
-    private ArrayList<RoadModel> listRoad;
-
-    private LinkedList<CarModel> garageFrozen;
-
-    private HashSet<String> arrivedCar;
-
-    private HashSet<CarModel> nowInRoadCar;
+//    @Autowired
+//    private RoadService roadService;
+//
+//    private ArrayList<RoadModel> listRoad;
+//
+//    private LinkedList<CarModel> garageFrozen;
+//
+//    private HashSet<String> arrivedCar;
+//
+//    private HashSet<CarModel> nowInRoadCar;
 
 
     /*
@@ -63,9 +64,9 @@ public class DebugServiceImpl implements DebugService {
      * 用来输出路的状态，来debug
      */
     public void testShowRoadInfo() {
-        if(managementService.getListRoad()==null)
-            managementService.setListRoad();
-        listRoad=managementService.getListRoad();
+//        if(managementService.getListRoad()==null)
+//            managementService.setListRoad();
+//        listRoad=managementService.getListRoad();
         Iterator<RoadModel> it = listRoad.iterator();
         while (it.hasNext()) {
 
@@ -79,7 +80,7 @@ public class DebugServiceImpl implements DebugService {
      * 用来输出路的状态，来debug
      */
     public void testShowRoadInfo(String s) {
-        RoadModel r = roadService.getRoadModelById(s);
+        RoadModel r = mapRoad.get(s);
         System.out.println("-----正向：");
         for (int i = 0; i < r.getLanesNum(); i++) {
 
@@ -96,9 +97,9 @@ public class DebugServiceImpl implements DebugService {
     }
 
     public void testShowMapInfo() {
-        garageFrozen=managementService.getGarageFrozen();
-        nowInRoadCar=managementService.getNowInRoadCar();
-        arrivedCar=managementService.getArrivedCar();
+//        garageFrozen=managementService.getGarageFrozen();
+//        nowInRoadCar=managementService.getNowInRoadCar();
+//        arrivedCar=managementService.getArrivedCar();
         System.out.println("车库里还有："+garageFrozen.size()+"  在路上有："+ nowInRoadCar.size()+"  已经到家："+arrivedCar.size());
     }
 }

@@ -27,9 +27,6 @@ public class CrossServiceImpl extends BaseService implements CrossService {
     @Autowired
     private RoadService roadService;
 
-    public CrossServiceImpl() {
-        System.out.println("");
-    }
 
     @Override
     public CrossModel getCrossModelById(String crossID) {
@@ -92,7 +89,7 @@ public class CrossServiceImpl extends BaseService implements CrossService {
 
     @Override
     public Map<String, CrossModel> mapCross() {
-        ArrayList<CrossModel> listCross  = (ArrayList<CrossModel>) this.listCross();
+//        ArrayList<CrossModel> listCross  = (ArrayList<CrossModel>) this.listCross();
         Map<String,CrossModel> mapCross = new HashMap<>();
         for (CrossModel crossModel:listCross
              ) {
@@ -111,8 +108,8 @@ public class CrossServiceImpl extends BaseService implements CrossService {
 
             return null;
         }
-        CrossModel s = getCrossModelById(crossSID);
-        CrossModel t = getCrossModelById(crossTID);
+        CrossModel s = mapCross.get(crossSID);
+        CrossModel t = mapCross.get(crossTID);
         String[] roadss = s.getRoadIDList();
         String[] roadst = t.getRoadIDList();
         HashSet<String> set = new HashSet<>();
@@ -138,8 +135,8 @@ public class CrossServiceImpl extends BaseService implements CrossService {
      * @return 从当前出发路口出发的第一条道路
      */
     public String findFirstRoad(String sID, String tID) {
-        CrossModel s = getCrossModelById(sID);
-        CrossModel t = getCrossModelById(tID);
+        CrossModel s = mapCross.get(sID);
+        CrossModel t = mapCross.get(tID);
         CrossModel temp = t;
         while (!temp.preCross.equals(s)) {
             temp = temp.preCross;
@@ -154,7 +151,7 @@ public class CrossServiceImpl extends BaseService implements CrossService {
      * @return 找到从路from通过路口c到路to的这个转弯的优先级
      */
     public int setPriority(String fromRoadID, String toRoadID, String crossID) {
-        CrossModel c = getCrossModelById(crossID);
+        CrossModel c = mapCross.get(crossID);
         int ans = 0;
         String[] roadlist = c.getRoadIDList();
         int i = -1, j = -1;

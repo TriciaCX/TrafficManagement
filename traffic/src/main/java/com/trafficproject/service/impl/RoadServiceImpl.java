@@ -2,6 +2,7 @@ package com.trafficproject.service.impl;
 
 import com.trafficproject.dao.RoadDOMapper;
 import com.trafficproject.dataobject.RoadDO;
+import com.trafficproject.service.BaseService;
 import com.trafficproject.service.RoadService;
 import com.trafficproject.service.model.CarModel;
 import com.trafficproject.service.model.CrossModel;
@@ -16,7 +17,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class RoadServiceImpl implements RoadService {
+public class RoadServiceImpl extends BaseService implements RoadService {
 
     @Autowired
     private RoadDOMapper roadDOMapper;
@@ -50,10 +51,10 @@ public class RoadServiceImpl implements RoadService {
             LaneModel laneModel = new LaneModel(i);
             roadModel.getForwardLane().add(laneModel);
         }
-        if(roadDO.getIsduplex()==1) {
-            roadModel.setDuplex(true);
+        if(roadDO.getIsduplex()==0) {
+            roadModel.setDuplex(false);
         }else {
-            roadModel.setDuplex(false); //如果还有反向道路
+            roadModel.setDuplex(true); //如果还有反向道路
             for(int i = 0;i<roadDO.getLanesnum();i++){
                 LaneModel laneModel = new LaneModel(i);
                 roadModel.getBackwardLane().add(laneModel);
@@ -76,7 +77,7 @@ public class RoadServiceImpl implements RoadService {
 
     @Override
     public Map<String, RoadModel> mapRoad() {
-        ArrayList<RoadModel> listRoad = (ArrayList<RoadModel>) this.listRoad();
+//        ArrayList<RoadModel> listRoad = (ArrayList<RoadModel>) this.listRoad();
         Map<String,RoadModel> mapRoad = new HashMap<>();
         for (RoadModel roadModel:listRoad) {
             mapRoad.put(roadModel.getRoadID(),roadModel);
@@ -88,12 +89,12 @@ public class RoadServiceImpl implements RoadService {
 
     /**
      * 查询当前道路是否是真正有可走的空间，因为需要先走车道号小的车道。 小车道没空间，但车没有更新过直接判为没路； 没更新有空间则有路；更新过没空间继续查找大的lane； 更新过有空间为有路；
-     * @param roadID    当前搜索的道路 ;
+     * @param road    当前搜索的道路 ;
      * @param CrossID crossID:出发节点ID
      * @return -2:所有lane都更新过了,也没有空间；-1：未更新过而没有空间；1：未更新过而有空间；2：更新过而有空间；
      */
-    public int hasLeftLength(String roadID, String CrossID) {
-        RoadModel road=getRoadModelById(roadID);
+    public int hasLeftLength(RoadModel road, String CrossID) {
+//        RoadModel road=getRoadModelById(roadID);
         LinkedList<LaneModel> laneList;
         // 找到和车辆方向一致的车道集合
         if (road.isDuplex()) {
@@ -101,7 +102,7 @@ public class RoadServiceImpl implements RoadService {
         } else {
             laneList = road.getForwardLane();
         }
-        List<Integer> leftLength = getLeftLanesLength(roadID, CrossID);
+        List<Integer> leftLength = getLeftLanesLength(road, CrossID);
         int i = 0;
         int laneNum = leftLength.size();
         for (; i < laneNum; i++) {
@@ -135,12 +136,12 @@ public class RoadServiceImpl implements RoadService {
 
     /**
      * 根据道路road以及当前路口找到道路通向的下一路口
-     * @param roadID
+     * @param road
      * @param sID
      * @return
      */
-    public String getCross(String roadID, String sID) {
-        RoadModel road=getRoadModelById(roadID);
+    public String getCross(RoadModel road, String sID) {
+//        RoadModel road=getRoadModelById(roadID);
         if (!road.isDuplex()) {
             if (road.getFromCrossID().equals(sID)) {
                 return road.getToCrossID();
@@ -156,11 +157,11 @@ public class RoadServiceImpl implements RoadService {
 
     /**
      * cost1
-     * @param roadID
+     * @param road
      * @return NormalizedRoadLength
      */
-    public float getNormalizedRoadLength(String roadID, int maxRoadLength) {
-        RoadModel road=getRoadModelById(roadID);
+    public float getNormalizedRoadLength(RoadModel road, int maxRoadLength) {
+//        RoadModel road=getRoadModelById(roadID);
         float NormalizedRoadLength = 0;
         // Main.maxRoadLength最大路长度
         NormalizedRoadLength = road.getRoadLength() / maxRoadLength;
@@ -169,12 +170,12 @@ public class RoadServiceImpl implements RoadService {
 
     /**
      * 返回下一时刻road的每一条lane还能进入多少辆车,即车位于NextPos时还剩多少位置
-     * @param myRoadID
+     * @param myRoad
      * @param crossID
      * @return
      */
-    public ArrayList<Integer> getLeftLanesLength(String myRoadID, String crossID) {
-        RoadModel myRoad=getRoadModelById(myRoadID);
+    public ArrayList<Integer> getLeftLanesLength(RoadModel myRoad, String crossID) {
+//        RoadModel myRoad=getRoadModelById(myRoadID);
         if (myRoad == null || myRoad.getRoadID().equals("-1")) {
             System.out.println("road");
         }
@@ -223,14 +224,14 @@ public class RoadServiceImpl implements RoadService {
     }
 
     /**
-     * @param roadID
+     * @param road
      * @param crossID
      * @return NormalizedRoadLeftLength
      */
-    public float getNormalizedRoadLeftLength(String roadID, String crossID) {
-        RoadModel road=getRoadModelById(roadID);
+    public float getNormalizedRoadLeftLength(RoadModel road, String crossID) {
+//        RoadModel road=getRoadModelById(roadID);
         float NormalizedRoadLeftLength = 0;
-        ArrayList<Integer> leftLength = getLeftLanesLength(roadID,crossID);
+        ArrayList<Integer> leftLength = getLeftLanesLength(road,crossID);
         int ans=0;
         Iterator<Integer> i=leftLength.iterator();
         while(i.hasNext()) {

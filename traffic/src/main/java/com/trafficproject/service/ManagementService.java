@@ -7,22 +7,22 @@ import com.trafficproject.service.model.RoadModel;
 import java.util.*;
 
 public interface ManagementService {
-    ArrayList<CrossModel> getListCross();
-    ArrayList<CarModel> getListCar();
-    ArrayList<RoadModel> getListRoad();
+//    ArrayList<CrossModel> getListCross();
+//    ArrayList<CarModel> getListCar();
+//    ArrayList<RoadModel> getListRoad();
 
-    void setListCross();
-    void setListRoad();
-    void setListCar();
-
-
+//    void setListCross();
+//    void setListRoad();
+//    void setListCar();
 
 
-    LinkedList<CarModel> getGarageFrozen();
 
-    HashSet<CarModel> getNowInRoadCar();
 
-    HashSet<String> getArrivedCar();
+//    LinkedList<CarModel> getGarageFrozen();
+//
+//    HashSet<CarModel> getNowInRoadCar();
+//
+//    HashSet<String> getArrivedCar();
 
 
     /**
